@@ -1,6 +1,8 @@
 package com.example.eduworldspring.service;
 
 import com.example.eduworldspring.model.Category;
+import com.example.eduworldspring.tdo.category.CategoryCreateUpdateDto;
+import com.example.eduworldspring.tdo.category.CategoryDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,19 +14,25 @@ public class CategoryServiceImpl implements CategoryService {
 
     private List<Category> categories = new ArrayList<>();
 
+
     @Override
-    public void addCategory(Category category) {
+    public void addCategory(CategoryCreateUpdateDto categoryCreateUpdateDto) {
+
+        Category category = new Category();
+        category = category.toCategory(categoryCreateUpdateDto);
         if(category !=null && category.getName() != null) {
             categories.add(category);
         }
     }
 
+
+
     @Override
-    public boolean removeCategoryByName(String name) {
+    public boolean removeCategoryById(Long id) {
         Iterator<Category> iterator = categories.iterator();
         while (iterator.hasNext()) {
             Category category = iterator.next();
-            if (category.getName().equals(name)) {
+            if (category.getId().equals(id)) {
                 iterator.remove();
                 return true;
             }
@@ -33,17 +41,21 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getByName(String name) {
+    public CategoryDto getByName(String name) {
         for (Category category : categories) {
             if (category.getName().equals(name)) {
-                return category;
+                return category.toCategoryDto(category);
             }
         }
         return null;
     }
 
     @Override
-    public List<Category> getCategories() {
-        return new ArrayList<>(categories);
+    public List<CategoryDto> getCategories() {
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+        for (Category category : categories) {
+            categoryDtos.add(category.toCategoryDto(category));
+        }
+        return categoryDtos;
     }
 }

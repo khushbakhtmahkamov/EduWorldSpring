@@ -1,12 +1,13 @@
 package com.example.eduworldspring.service;
 
-import com.example.eduworldspring.model.Category;
+import com.example.eduworldspring.tdo.category.CategoryCreateUpdateDto;
+import com.example.eduworldspring.tdo.category.CategoryDto;
 
 import java.util.List;
 
 public interface CategoryService {
-    void addCategory(Category category);
-    boolean removeCategoryByName(String name);
-    Category getByName(String name);
-    List<Category> getCategories();
+    void addCategory(CategoryCreateUpdateDto category);
+    boolean removeCategoryById(Long id);
+    CategoryDto getByName(String name);
+    List<CategoryDto> getCategories();
 }
