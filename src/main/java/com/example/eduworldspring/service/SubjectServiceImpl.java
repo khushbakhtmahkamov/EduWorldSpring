@@ -1,7 +1,7 @@
 package com.example.eduworldspring.service;
 
 import com.example.eduworldspring.model.Subject;
-import com.example.eduworldspring.tdo.subject.SubjectCreateUpdateDto;
+import com.example.eduworldspring.dto.subject.SubjectCreateUpdateDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

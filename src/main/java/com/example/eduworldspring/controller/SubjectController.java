@@ -2,8 +2,7 @@ package com.example.eduworldspring.controller;
 
 import com.example.eduworldspring.model.Subject;
 import com.example.eduworldspring.service.SubjectService;
-import com.example.eduworldspring.tdo.subject.SubjectCreateUpdateDto;
-import com.example.eduworldspring.tdo.subject.SubjectDto;
+import com.example.eduworldspring.dto.subject.SubjectCreateUpdateDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;

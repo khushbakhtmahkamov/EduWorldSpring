@@ -1,7 +1,7 @@
 package com.example.eduworldspring.model;
 
-import com.example.eduworldspring.tdo.subject.SubjectCreateUpdateDto;
-import com.example.eduworldspring.tdo.subject.SubjectDto;
+import com.example.eduworldspring.dto.subject.SubjectCreateUpdateDto;
+import com.example.eduworldspring.dto.subject.SubjectDto;
 import lombok.Getter;
 import lombok.Setter;
 
