@@ -39,6 +39,10 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Boolean updateSubject(SubjectCreateUpdateDto subjectCreateUpdateDto, Long id) {
+        if (id == null || subjectCreateUpdateDto == null) {
+            return false;
+        }
+
         Subject updatedSubject = Subject.toSubject(subjectCreateUpdateDto);
         updatedSubject.setId(id);
 
