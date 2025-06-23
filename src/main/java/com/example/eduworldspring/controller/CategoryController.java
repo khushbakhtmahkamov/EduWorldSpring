@@ -1,9 +1,8 @@
 package com.example.eduworldspring.controller;
 
-import com.example.eduworldspring.model.Category;
 import com.example.eduworldspring.service.CategoryService;
-import com.example.eduworldspring.tdo.category.CategoryCreateUpdateDto;
-import com.example.eduworldspring.tdo.category.CategoryDto;
+import com.example.eduworldspring.dto.category.CategoryCreateUpdateDto;
+import com.example.eduworldspring.dto.category.CategoryDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,9 +32,18 @@ public class CategoryController {
         return categoryService.removeCategoryById(id);
     }
 
+    /*@PutMapping("/{id}")
+    public CategoryDto updateCategory(@PathVariable Long id, @RequestBody CategoryCreateUpdateDto categoryCreateUpdateDto) {
+        categoryCreateUpdateDto.setId(id);
+        categoryService.addCategory(categoryCreateUpdateDto);
+        return categoryService.getByName(categoryCreateUpdateDto.getName());
+    }*/
+
     @GetMapping("/{name}")
     public CategoryDto getCategoryByName(@PathVariable String name) {
         return categoryService.getByName(name);
     }
+
+
 
 }

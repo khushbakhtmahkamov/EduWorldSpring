@@ -1,5 +1,9 @@
 package com.example.eduworldspring.model;
 
+import com.example.eduworldspring.dto.user.UserCreateDto;
+
+import java.util.concurrent.ThreadLocalRandom;
+
 public class User {
 
     private Long id;
@@ -76,5 +80,20 @@ public class User {
         this.password = password;
         this.language = language;
         this.role = role;
+    }
+
+    public User createUser(UserCreateDto userCreateDto, Language language, Role role) {
+        return new User(
+                ThreadLocalRandom.current().nextLong(),
+                userCreateDto.getName(),
+                userCreateDto.getAge(),
+                userCreateDto.getEmail(),
+                userCreateDto.getPassword(),
+                language,
+                role
+        );
+    }
+    public User() {
+        // Default constructor
     }
 }

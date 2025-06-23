@@ -1,9 +1,12 @@
 package com.example.eduworldspring.service;
 
 
+import com.example.eduworldspring.dto.user.UserCreateDto;
 import com.example.eduworldspring.model.Language;
 import com.example.eduworldspring.model.Role;
 import com.example.eduworldspring.model.User;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,10 +16,29 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService{
 
+    private RoleService roleService;
+    private LanguageService languageService;
+
+    public UserServiceImpl(RoleService roleService, LanguageService languageService) {
+        this.roleService = roleService;
+        this.languageService = languageService;
+    }
+
     private List<User> users = new ArrayList<>();
     @Override
-    public void addUser(User user) {
-        if(user != null || user.getName() != null ) {
+    public void addUser(UserCreateDto userCreateDto) {
+        Role role = roleService.getById(userCreateDto.getRoleId());
+        if(role == null) {
+            throw new IllegalArgumentException("Role not found with id: " + userCreateDto.getRoleId());
+        }
+        Language language = languageService.getById(userCreateDto.getLanguageId());
+        if(language == null) {
+            throw new IllegalArgumentException("Language not found with id: " + userCreateDto.getLanguageId());
+        }
+
+        User user = new User();
+        user= user.createUser(userCreateDto, language, role);
+        if(user != null && user.getName() != null) {
             users.add(user);
         }
     }

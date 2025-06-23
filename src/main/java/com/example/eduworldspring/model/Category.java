@@ -1,9 +1,8 @@
 package com.example.eduworldspring.model;
 
-import com.example.eduworldspring.tdo.category.CategoryCreateUpdateDto;
-import com.example.eduworldspring.tdo.category.CategoryDto;
+import com.example.eduworldspring.dto.category.CategoryCreateUpdateDto;
+import com.example.eduworldspring.dto.category.CategoryDto;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Category {
@@ -14,8 +13,6 @@ public class Category {
 
     public Category() {
     }
-
-    ;
 
     public Category(String name, String description, boolean isActive, Long id) {
         this.name = name;

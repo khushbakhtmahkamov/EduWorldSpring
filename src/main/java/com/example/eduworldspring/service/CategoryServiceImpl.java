@@ -1,8 +1,8 @@
 package com.example.eduworldspring.service;
 
 import com.example.eduworldspring.model.Category;
-import com.example.eduworldspring.tdo.category.CategoryCreateUpdateDto;
-import com.example.eduworldspring.tdo.category.CategoryDto;
+import com.example.eduworldspring.dto.category.CategoryCreateUpdateDto;
+import com.example.eduworldspring.dto.category.CategoryDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.eduworldspring.tdo.category;
+package com.example.eduworldspring.dto.category;
 
 import lombok.Getter;
 import lombok.Setter;
