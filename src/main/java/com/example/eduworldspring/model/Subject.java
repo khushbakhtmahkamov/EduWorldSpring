@@ -1,57 +1,50 @@
 package com.example.eduworldspring.model;
 
+import com.example.eduworldspring.tdo.subject.SubjectCreateUpdateDto;
+import com.example.eduworldspring.tdo.subject.SubjectDto;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.concurrent.ThreadLocalRandom;
+
+@Getter
+@Setter
 public class Subject {
+    private Long id;
     private String title;
     private String code;
-    private int credits;
+    private Integer credits;
     private String description;
 
-    public Subject() {
+    public Subject(){
+
+    }
+
+    public Subject(Long id, String title, String code, Integer credits, String description) {
+        this.id = id;
         this.title = title;
         this.code = code;
         this.credits = credits;
         this.description = description;
     }
 
-    public String getTitle() {
-        return title;
+    public static Subject toSubject(SubjectCreateUpdateDto subjectCreateUpdateDto) {
+        return new Subject(
+                ThreadLocalRandom.current().nextLong(),
+                subjectCreateUpdateDto.getTitle(),
+                subjectCreateUpdateDto.getCode(),
+                subjectCreateUpdateDto.getCredits(),
+                subjectCreateUpdateDto.getDescription()
+        );
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public int getCredits() {
-        return credits;
-    }
-
-    public void setCredits(int credits) {
-        this.credits = credits;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "Subject{" +
-                "title='" + title + '\'' +
-                ", code='" + code + '\'' +
-                ", credits=" + credits +
-                ", description='" + description + '\'' +
-                '}';
+    public SubjectDto toSubjectDto(Subject subject){
+        return new SubjectDto(
+                subject.getId(),
+                subject.getTitle(),
+                subject.getCode(),
+                subject.getCredits(),
+                subject.getDescription()
+        );
     }
 }

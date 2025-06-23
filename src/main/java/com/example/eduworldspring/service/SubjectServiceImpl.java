@@ -1,39 +1,31 @@
 package com.example.eduworldspring.service;
 
 import com.example.eduworldspring.model.Subject;
+import com.example.eduworldspring.tdo.subject.SubjectCreateUpdateDto;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
+@Service
 public class SubjectServiceImpl implements SubjectService {
 
-    private List<Subject> subjects = new ArrayList<>();
+    private ArrayList<Subject> subjects = new ArrayList<>();
 
     @Override
-    public void addSubject(Subject subject) {
-        if (subject != null && subject.getTitle() != null) {
-            subjects.add(subject);
-        }
+    public Subject createSubject(SubjectCreateUpdateDto subjectCreateUpdateDto) {
+        Subject subject = Subject.toSubject(subjectCreateUpdateDto);
+        subjects.add(subject);
+        return subject;
     }
 
     @Override
-    public boolean removeSubjectByCode(String code) {
-        Iterator<Subject> iterator = subjects.iterator();
-        while (iterator.hasNext()) {
-            Subject subject = iterator.next();
-            if (subject.getCode().equalsIgnoreCase(code)) {
-                iterator.remove();
-                return true;
-            }
+    public Subject getSubject(Long id) {
+        if (id == null) {
+            return null;
         }
-        return false;
-    }
 
-    @Override
-    public Subject getByCode(String code) {
         for (Subject subject : subjects) {
-            if (subject.getCode().equalsIgnoreCase(code)) {
+            if (subject.getId().equals(id)){
                 return subject;
             }
         }
@@ -41,21 +33,36 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<Subject> getSubjects() {
-        return new ArrayList<>(subjects);
+    public ArrayList<Subject> getSubjects() {
+        return subjects;
     }
 
     @Override
-    public List<Subject> getSubjectsByCredits(int credits) {
-        List<Subject> filteredSubjects = new ArrayList<>();
-        for (Subject subject : subjects) {
-            if (subject.getCredits() == credits) {
-                filteredSubjects.add(subject);
+    public Boolean updateSubject(SubjectCreateUpdateDto subjectCreateUpdateDto, Long id) {
+        Subject updatedSubject = Subject.toSubject(subjectCreateUpdateDto);
+        updatedSubject.setId(id);
+
+        for (int i = 0; i < subjects.size(); i++) {
+            if (subjects.get(i).getId().equals(updatedSubject.getId())) {
+                subjects.set(i, updatedSubject);
+                return true;
             }
         }
+        return false;
+    }
 
+    @Override
+    public Boolean deleteSubject(Long id) {
+        if (id == null) {
+            return false;
+        }
 
-
-        return filteredSubjects;
+        for (Subject subject : subjects) {
+            if (subject.getId().equals(id)){
+                subjects.remove(subject);
+                return true;
+            }
+        }
+        return false;
     }
 }
