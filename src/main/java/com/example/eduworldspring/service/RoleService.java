@@ -2,8 +2,12 @@ package com.example.eduworldspring.service;
 
 import com.example.eduworldspring.model.Role;
 
-public interface RoleService {
+import java.util.List;
 
-    Role getById(Long id);
-    void createRole(Role role);
+public interface RoleService {
+    List<Role> getAllRoles();
+    Role getRoleById(Long id);
+    Role createRole(Role role);
+    Role updateRole(Long id, Role role);
+    void deleteRole(Long id);
 }
