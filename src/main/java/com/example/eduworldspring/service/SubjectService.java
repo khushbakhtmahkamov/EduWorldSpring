@@ -2,17 +2,15 @@ package com.example.eduworldspring.service;
 
 
 import com.example.eduworldspring.model.Subject;
+import com.example.eduworldspring.dto.subject.SubjectCreateUpdateDto;
 
-import java.util.List;
+import java.util.ArrayList;
+
 
 public interface SubjectService {
-    void addSubject(Subject subject);
-
-    boolean removeSubjectByCode(String code);
-
-    Subject getByCode(String code);
-
-    List<Subject> getSubjects();
-
-    List<Subject> getSubjectsByCredits(int credits);
+    Subject createSubject(SubjectCreateUpdateDto subjectCreateUpdateDto);
+    Subject getSubject(Long id);
+    ArrayList<Subject> getSubjects();
+    Boolean updateSubject(SubjectCreateUpdateDto subjectCreateUpdateDto, Long id);
+    Boolean deleteSubject(Long id);
 }
