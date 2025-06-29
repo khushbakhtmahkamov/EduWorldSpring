@@ -11,6 +11,7 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
 
     private List<Role> roles = new ArrayList<>();
+    private long nextId = 1;
 
     @Override
     public List<Role> getAllRoles() {
@@ -18,7 +19,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role getRoleById(Long id) {
+    public Role getById(Long id) {
         for (Role role : roles) {
             if (role.getId().equals(id)) {
                 return role;
@@ -29,6 +30,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role createRole(Role role) {
+        role.setId(nextId++);
         roles.add(role);
         return role;
     }
