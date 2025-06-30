@@ -21,24 +21,6 @@ public class Category {
         this.id = id;
     }
 
-    public Category toCategory(CategoryCreateUpdateDto categoryCreateUpdateDto) {
-        return new Category(
-                categoryCreateUpdateDto.getName(),
-                categoryCreateUpdateDto.getDescription(),
-                categoryCreateUpdateDto.isActive(),
-                ThreadLocalRandom.current().nextLong()
-        );
-    }
-
-    public CategoryDto toCategoryDto(Category category) {
-        return new CategoryDto(
-                category.getId(),
-                category.getName(),
-                category.getDescription(),
-                category.isActive()
-        );
-    }
-
     public Long getId() {
         return id;
     }

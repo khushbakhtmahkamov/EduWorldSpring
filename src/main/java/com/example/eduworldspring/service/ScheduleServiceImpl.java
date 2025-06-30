@@ -1,15 +1,20 @@
 package com.example.eduworldspring.service;
 
 import com.example.eduworldspring.dto.schedule.ScheduleCreateUpdateDto;
+import com.example.eduworldspring.mapper.ScheduleMapper;
 import com.example.eduworldspring.model.Schedule;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
+@RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
 
+    private final ScheduleMapper scheduleMapper;
     private ArrayList<Schedule> schedules = new ArrayList<>();
 
     public ArrayList<Schedule> getSchedules() {
@@ -31,7 +36,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     public Schedule createSchedule(ScheduleCreateUpdateDto scheduleCreateUpdateDto) {
-        Schedule schedule = Schedule.toSchedule(scheduleCreateUpdateDto);
+        Schedule schedule = scheduleMapper.toEntity(scheduleCreateUpdateDto, ThreadLocalRandom.current().nextLong(1,100));
         schedules.add(schedule);
         return schedule;
     }
@@ -41,7 +46,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             return false;
         }
 
-        Schedule updatedSchedule = Schedule.toSchedule(scheduleCreateUpdateDto);
+        /*Schedule updatedSchedule = Schedule.toSchedule(scheduleCreateUpdateDto);
         updatedSchedule.setId(id);
 
         for (int i = 0; i < schedules.size(); i++) {
@@ -49,7 +54,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 schedules.set(i, updatedSchedule);
                 return true;
             }
-        }
+        }*/
         return false;
     }
 

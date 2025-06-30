@@ -21,24 +21,4 @@ public class Subject {
     public Subject(){
 
     }
-
-    public static Subject toSubject(SubjectCreateUpdateDto subjectCreateUpdateDto) {
-        return new Subject(
-                ThreadLocalRandom.current().nextLong(),
-                subjectCreateUpdateDto.getTitle(),
-                subjectCreateUpdateDto.getCode(),
-                subjectCreateUpdateDto.getCredits(),
-                subjectCreateUpdateDto.getDescription()
-        );
-    }
-
-    public SubjectDto toSubjectDto(Subject subject){
-        return new SubjectDto(
-                subject.getId(),
-                subject.getTitle(),
-                subject.getCode(),
-                subject.getCredits(),
-                subject.getDescription()
-        );
-    }
 }

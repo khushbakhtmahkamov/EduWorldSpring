@@ -81,18 +81,6 @@ public class User {
         this.language = language;
         this.role = role;
     }
-
-    public User createUser(UserCreateDto userCreateDto, Language language, Role role) {
-        return new User(
-                ThreadLocalRandom.current().nextLong(),
-                userCreateDto.getName(),
-                userCreateDto.getAge(),
-                userCreateDto.getEmail(),
-                userCreateDto.getPassword(),
-                language,
-                role
-        );
-    }
     public User() {
         // Default constructor
     }

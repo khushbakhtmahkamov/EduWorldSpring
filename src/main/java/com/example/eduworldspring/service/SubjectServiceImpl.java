@@ -13,9 +13,9 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Subject createSubject(SubjectCreateUpdateDto subjectCreateUpdateDto) {
-        Subject subject = Subject.toSubject(subjectCreateUpdateDto);
-        subjects.add(subject);
-        return subject;
+       // Subject subject = Subject.toSubject(subjectCreateUpdateDto);
+       // subjects.add(subject);
+        return null;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class SubjectServiceImpl implements SubjectService {
             return false;
         }
 
-        Subject updatedSubject = Subject.toSubject(subjectCreateUpdateDto);
+        /*Subject updatedSubject = Subject.toSubject(subjectCreateUpdateDto);
         updatedSubject.setId(id);
 
         for (int i = 0; i < subjects.size(); i++) {
@@ -51,7 +51,7 @@ public class SubjectServiceImpl implements SubjectService {
                 subjects.set(i, updatedSubject);
                 return true;
             }
-        }
+        }*/
         return false;
     }
 

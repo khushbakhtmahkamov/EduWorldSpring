@@ -13,17 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Schedule {
     private Long id;
     private String description;
-    private Boolean is_active;
-    private Long lesson_id;
+    private Boolean isActive;
+    private Long lessonId;
 
     public Schedule() {}
-
-    public static Schedule toSchedule(ScheduleCreateUpdateDto scheduleCreateUpdateDto) {
-        return new Schedule(
-                ThreadLocalRandom.current().nextLong(),
-                scheduleCreateUpdateDto.getDescription(),
-                scheduleCreateUpdateDto.getIs_active(),
-                scheduleCreateUpdateDto.getLesson_id()
-        );
-    }
 }

@@ -2,27 +2,28 @@ package com.example.eduworldspring.service;
 
 
 import com.example.eduworldspring.dto.user.UserCreateDto;
+import com.example.eduworldspring.mapper.UserMapper;
 import com.example.eduworldspring.model.Language;
 import com.example.eduworldspring.model.Role;
 import com.example.eduworldspring.model.User;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
-    private RoleService roleService;
-    private LanguageService languageService;
+    private final RoleService roleService;
+    private final LanguageService languageService;
+    private final UserMapper userMapper;
 
-    public UserServiceImpl(RoleService roleService, LanguageService languageService) {
-        this.roleService = roleService;
-        this.languageService = languageService;
-    }
 
     private List<User> users = new ArrayList<>();
     @Override
@@ -37,7 +38,8 @@ public class UserServiceImpl implements UserService{
         }
 
         User user = new User();
-        user= user.createUser(userCreateDto, language, role);
+        Long id = ThreadLocalRandom.current().nextLong(1,100);
+        user= userMapper.toUser(userCreateDto, id,  language, role);
         if(user != null && user.getName() != null) {
             users.add(user);
         }

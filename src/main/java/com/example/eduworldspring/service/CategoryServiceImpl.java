@@ -19,10 +19,10 @@ public class CategoryServiceImpl implements CategoryService {
     public void addCategory(CategoryCreateUpdateDto categoryCreateUpdateDto) {
 
         Category category = new Category();
-        category = category.toCategory(categoryCreateUpdateDto);
+       /* category = category.toCategory(categoryCreateUpdateDto);
         if(category !=null && category.getName() != null) {
             categories.add(category);
-        }
+        }*/
     }
 
 
@@ -44,7 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto getByName(String name) {
         for (Category category : categories) {
             if (category.getName().equals(name)) {
-                return category.toCategoryDto(category);
+                //return category.toCategoryDto(category);
             }
         }
         return null;
@@ -54,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryDto> getCategories() {
         List<CategoryDto> categoryDtos = new ArrayList<>();
         for (Category category : categories) {
-            categoryDtos.add(category.toCategoryDto(category));
+          //  categoryDtos.add(category.toCategoryDto(category));
         }
         return categoryDtos;
     }

@@ -6,9 +6,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class ScheduleCreateUpdateDto {
     private String description;
-    private Boolean is_active;
-    private Long lesson_id;
+    private Boolean isActive;
+    private Long lessonId;
 }
