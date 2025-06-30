@@ -2,6 +2,8 @@ package com.example.eduworldspring.service;
 
 
 import com.example.eduworldspring.dto.user.UserCreateDto;
+import com.example.eduworldspring.exceptions.BusinessExceptionCode;
+import com.example.eduworldspring.exceptions.BusinessRuntimeException;
 import com.example.eduworldspring.mapper.UserMapper;
 import com.example.eduworldspring.model.Language;
 import com.example.eduworldspring.model.Role;
@@ -30,11 +32,11 @@ public class UserServiceImpl implements UserService{
     public void addUser(UserCreateDto userCreateDto) {
         Role role = roleService.getById(userCreateDto.getRoleId());
         if(role == null) {
-            throw new IllegalArgumentException("Role not found with id: " + userCreateDto.getRoleId());
+            throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND,"Role not found with id: " + userCreateDto.getRoleId());
         }
         Language language = languageService.getById(userCreateDto.getLanguageId());
         if(language == null) {
-            throw new IllegalArgumentException("Language not found with id: " + userCreateDto.getLanguageId());
+            throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Language not found with id: " + userCreateDto.getLanguageId());
         }
 
         User user = new User();
