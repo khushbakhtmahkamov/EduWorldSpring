@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/api/schedules")
 public class ScheduleController {
-    private ScheduleService scheduleService;
+    private final ScheduleService scheduleService;
 
     public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/api/subjects")
 public class SubjectController {
-    private SubjectService subjectService;
+    private final SubjectService subjectService;
 
     public SubjectController(SubjectService subjectService) {
         this.subjectService = subjectService;

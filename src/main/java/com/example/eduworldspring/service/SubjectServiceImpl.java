@@ -1,27 +1,40 @@
 package com.example.eduworldspring.service;
 
+import com.example.eduworldspring.exceptions.BusinessExceptionCode;
+import com.example.eduworldspring.exceptions.BusinessRuntimeException;
+import com.example.eduworldspring.mapper.SubjectMapper;
 import com.example.eduworldspring.model.Subject;
 import com.example.eduworldspring.dto.subject.SubjectCreateUpdateDto;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
+@RequiredArgsConstructor
 public class SubjectServiceImpl implements SubjectService {
 
+    private final SubjectMapper subjectMapper;
     private ArrayList<Subject> subjects = new ArrayList<>();
 
     @Override
     public Subject createSubject(SubjectCreateUpdateDto subjectCreateUpdateDto) {
-       // Subject subject = Subject.toSubject(subjectCreateUpdateDto);
-       // subjects.add(subject);
-        return null;
+        if (subjectCreateUpdateDto == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "SubjectCreateUpdateDto cannot be null");
+        }
+
+        Subject subject = subjectMapper.toSubject(subjectCreateUpdateDto, ThreadLocalRandom.current().nextLong(1, 100));
+        subjects.add(subject);
+        return subject;
     }
 
     @Override
     public Subject getSubject(Long id) {
         if (id == null) {
-            return null;
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
 
         for (Subject subject : subjects) {
@@ -29,7 +42,7 @@ public class SubjectServiceImpl implements SubjectService {
                 return subject;
             }
         }
-        return null;
+        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found");
     }
 
     @Override
@@ -39,26 +52,28 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Boolean updateSubject(SubjectCreateUpdateDto subjectCreateUpdateDto, Long id) {
-        if (id == null || subjectCreateUpdateDto == null) {
-            return false;
+        if (id == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
+        }
+        if (subjectCreateUpdateDto == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "SubjectCreateUpdateDto cannot be null");
         }
 
-        /*Subject updatedSubject = Subject.toSubject(subjectCreateUpdateDto);
-        updatedSubject.setId(id);
+        Subject updatedSubject = subjectMapper.toSubject(subjectCreateUpdateDto, id);
 
         for (int i = 0; i < subjects.size(); i++) {
             if (subjects.get(i).getId().equals(updatedSubject.getId())) {
                 subjects.set(i, updatedSubject);
                 return true;
             }
-        }*/
-        return false;
+        }
+        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found");
     }
 
     @Override
     public Boolean deleteSubject(Long id) {
         if (id == null) {
-            return false;
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
 
         for (Subject subject : subjects) {
@@ -67,6 +82,6 @@ public class SubjectServiceImpl implements SubjectService {
                 return true;
             }
         }
-        return false;
+        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found");
     }
 }

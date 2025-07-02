@@ -1,6 +1,5 @@
 package com.example.eduworldspring.dto.schedule;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

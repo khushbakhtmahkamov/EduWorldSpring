@@ -17,8 +17,4 @@ public class Subject {
     private String code;
     private Integer credits;
     private String description;
-
-    public Subject(){
-
-    }
 }
