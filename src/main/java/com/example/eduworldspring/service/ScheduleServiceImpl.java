@@ -4,6 +4,7 @@ import com.example.eduworldspring.dto.schedule.ScheduleCreateUpdateDto;
 import com.example.eduworldspring.exceptions.BusinessExceptionCode;
 import com.example.eduworldspring.exceptions.BusinessRuntimeException;
 import com.example.eduworldspring.mapper.ScheduleMapper;
+import com.example.eduworldspring.model.Lesson;
 import com.example.eduworldspring.model.Schedule;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     public Schedule createSchedule(ScheduleCreateUpdateDto scheduleCreateUpdateDto) {
-        Lesson lesson = lessonService.getId(scheduleCreateUpdateDto.getLessonId());
+        Lesson lesson = lessonService.getLesson(scheduleCreateUpdateDto.getLessonId());
 
         if (lesson == null) {
             throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Lesson not found");
