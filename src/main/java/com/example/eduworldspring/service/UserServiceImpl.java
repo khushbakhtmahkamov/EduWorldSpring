@@ -39,9 +39,8 @@ public class UserServiceImpl implements UserService{
             throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Language not found with id: " + userCreateDto.getLanguageId());
         }
 
-        User user = new User();
         Long id = ThreadLocalRandom.current().nextLong(1,100);
-        user= userMapper.toUser(userCreateDto, id,  language, role);
+        User user= userMapper.toUser(userCreateDto, id,  language, role);
         if(user != null && user.getName() != null) {
             users.add(user);
         }
