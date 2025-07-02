@@ -4,6 +4,7 @@ public class Language {
     Long id;
     String name;
     String code;
+
     boolean isActive;
 
     public Language(Long id, String name, String code, boolean isActive) {
