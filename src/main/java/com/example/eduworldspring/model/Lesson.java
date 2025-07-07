@@ -18,7 +18,4 @@ public class Lesson {
     private Long subject_id;
     private Long teacher_id;
 
-    public Lesson() {
-
-    }
 }
