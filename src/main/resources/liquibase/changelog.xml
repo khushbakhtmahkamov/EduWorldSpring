@@ -5,5 +5,6 @@
 
     <include file="add-user-role-language-tables.sql" relativeToChangelogFile="true"/>
     <include file="add-phone-colune-to-user-tables.sql" relativeToChangelogFile="true"/>
+    <include file="add_subject_table.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -1,17 +1,20 @@
 package com.example.eduworldspring.model;
 
-import com.example.eduworldspring.dto.subject.SubjectCreateUpdateDto;
-import com.example.eduworldspring.dto.subject.SubjectDto;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.concurrent.ThreadLocalRandom;
-
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
+@Table(name = "subjects")
 public class Subject {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String code;

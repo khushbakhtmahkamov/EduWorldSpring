@@ -1,10 +1,12 @@
 package com.example.eduworldspring.service;
 
 import com.example.eduworldspring.model.Task;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+    @Service
     public class TaskServiceImpl implements TaskService {
 
         private final List<Task> taskList = new ArrayList<>();

@@ -8,5 +8,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface SubjectMapper {
-    Subject toSubject(SubjectCreateUpdateDto scheduleCreateUpdateDto, Long id);
+    Subject toSubject(SubjectCreateUpdateDto scheduleCreateUpdateDto);
 }

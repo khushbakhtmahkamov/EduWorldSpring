@@ -5,7 +5,7 @@ import com.example.eduworldspring.service.SubjectService;
 import com.example.eduworldspring.dto.subject.SubjectCreateUpdateDto;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/subjects")
@@ -22,7 +22,7 @@ public class SubjectController {
     }
 
     @GetMapping
-    public ArrayList<Subject> getAllSubjects() {
+    public List<Subject> getAllSubjects() {
         return subjectService.getSubjects();
     }
 
