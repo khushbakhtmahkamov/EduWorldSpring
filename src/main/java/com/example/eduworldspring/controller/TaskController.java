@@ -19,11 +19,6 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-
-    private static TaskController createTaskController(TaskService taskService) {
-        return new TaskController(taskService);
-    }
-
     // Создание новой задачи
     @PostMapping
     public Task createTask(@RequestBody TaskCreateDto taskCreateDto) {
