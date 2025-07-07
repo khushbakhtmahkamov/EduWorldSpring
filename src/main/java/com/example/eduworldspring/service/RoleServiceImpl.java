@@ -1,100 +1,60 @@
 package com.example.eduworldspring.service;
 
-import com.example.eduworldspring.dto.role.RoleCreateDto;
-import com.example.eduworldspring.dto.role.RoleDto;
-import com.example.eduworldspring.dto.role.RoleUpdateDto;
-import com.example.eduworldspring.mapper.RoleMapper;
 import com.example.eduworldspring.model.Role;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.example.eduworldspring.exceptions.BusinessRuntimeException;
-import com.example.eduworldspring.exceptions.BusinessExceptionCode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
-
-    private final RoleMapper roleMapper;
 
     private List<Role> roles = new ArrayList<>();
     private long nextId = 1;
 
     @Override
-    public List<RoleDto> getAllRoles() {
-        List<RoleDto> result = new ArrayList<>();
+    public List<Role> getAllRoles() {
+        return new ArrayList<>(roles);
+    }
+
+    @Override
+    public Role getById(Long id) {
         for (Role role : roles) {
-            result.add(roleMapper.toDto(role));
+            if (role.getId().equals(id)) {
+                return role;
+            }
         }
-        return result;
+        return null;
     }
 
     @Override
-    public RoleDto getById(Long id) {
-        Role role = findByIdOrThrow(id);
-        return roleMapper.toDto(role);
-    }
-
-    @Override
-    public RoleDto createRole(RoleCreateDto dto) {
-        Role role = roleMapper.toModel(dto);
+    public Role createRole(Role role) {
         role.setId(nextId++);
         roles.add(role);
-        return roleMapper.toDto(role);
+        return role;
     }
 
     @Override
-    public RoleDto updateRole(Long id, RoleUpdateDto dto) {
-        Role role = findByIdOrThrow(id);
-        role.setName(dto.getName());
-        role.setDescription(dto.getDescription());
-        role.setActive(dto.isActive());
-        return roleMapper.toDto(role);
+    public Role updateRole(Long id, Role roleDetails) {
+        for (Role role : roles) {
+            if (role.getId().equals(id)) {
+                role.setName(roleDetails.getName());
+                return role;
+            }
+        }
+        return null;
     }
 
     @Override
     public void deleteRole(Long id) {
-        Role role = findByIdOrThrow(id);
-        boolean removed = false;
-        for (int i = 0; i < roles.size(); i++) {
-            if (roles.get(i).getId().equals(id)) {
-                roles.remove(i);
-                removed = true;
+        Iterator<Role> iterator = roles.iterator();
+        while (iterator.hasNext()) {
+            Role role = iterator.next();
+            if (role.getId().equals(id)) {
+                iterator.remove();
                 break;
             }
         }
-        if (!removed) {
-            throw new BusinessRuntimeException(
-                    BusinessExceptionCode.COULD_NOT_DELETE,
-                    "Could not delete role with id " + id
-            );
-        }
     }
-
-    private Role findByIdOrThrow(Long id) {
-        for (Role role : roles) {
-            if (role.getId().equals(id)) {
-                return role;
-            }
-        }
-        throw new BusinessRuntimeException(
-                BusinessExceptionCode.NOT_FOUND, "Role with id " + id + " not found"
-        );
-    }
-
-    @Override
-    public Role getEntityById(Long id) {
-        for (Role role : roles) {
-            if (role.getId().equals(id)) {
-                return role;
-            }
-        }
-        throw new BusinessRuntimeException(
-                BusinessExceptionCode.NOT_FOUND,
-                "Role with id " + id + " not found"
-        );
-    }
-
 }
