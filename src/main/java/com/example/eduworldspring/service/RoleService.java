@@ -6,4 +6,6 @@ public interface RoleService {
 
     Role getById(Long id);
     void createRole(Role role);
+
+    boolean deleteById(Long id);
 }
