@@ -6,33 +6,32 @@ import com.example.eduworldspring.exceptions.BusinessRuntimeException;
 import com.example.eduworldspring.mapper.ScheduleMapper;
 import com.example.eduworldspring.model.Lesson;
 import com.example.eduworldspring.model.Schedule;
-import lombok.Getter;
+import com.example.eduworldspring.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
 
+    private final ScheduleRepository scheduleRepository;
     private final ScheduleMapper scheduleMapper;
-    @Getter
-    private ArrayList<Schedule> schedules = new ArrayList<>();
+
     private final LessonService lessonService;
+
+    public List<Schedule> getSchedules() {
+        return scheduleRepository.findAll();
+    }
 
     public Schedule getSchedule(Long id) {
         if (id == null) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Id cannot be null");
         }
 
-        for (Schedule schedule : schedules) {
-            if (schedule.getId().equals(id)) {
-                return schedule;
-            }
-        }
-        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule with id " + id + "not found");
+        return scheduleRepository.findById(id).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule with id " + id + " not found"));
     }
 
     public Schedule createSchedule(ScheduleCreateUpdateDto scheduleCreateUpdateDto) {
@@ -42,8 +41,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Lesson not found");
         }
 
-        Schedule schedule = scheduleMapper.toSchedule(scheduleCreateUpdateDto, ThreadLocalRandom.current().nextLong(1,100), lesson);
-        schedules.add(schedule);
+        Schedule schedule = scheduleMapper.toSchedule(scheduleCreateUpdateDto, lesson);
+        scheduleRepository.save(schedule);
         return schedule;
     }
 
@@ -55,15 +54,16 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "ScheduleCreateUpdateDto cannot be null");
         }
 
-        Schedule updatedSchedule = scheduleMapper.toScheduleForUpdate(scheduleCreateUpdateDto, id);
+        Schedule schedule = getSchedule(id);
+        schedule.setDescription(scheduleCreateUpdateDto.getDescription());
 
-        for (int i = 0; i < schedules.size(); i++) {
-            if (schedules.get(i).getId().equals(updatedSchedule.getId())) {
-                schedules.set(i, updatedSchedule);
-                return true;
-            }
-        }
-        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule not found");
+        Lesson lesson = lessonService.getLesson(scheduleCreateUpdateDto.getLessonId());
+        schedule.setLesson(lesson);
+
+        schedule.setIsActive(scheduleCreateUpdateDto.getIsActive());
+
+        scheduleRepository.save(schedule);
+        return true;
     }
 
     public Boolean deleteSchedule(Long id) {
@@ -71,12 +71,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Id cannot be null");
         }
 
-        for ( Schedule schedule : schedules) {
-            if (schedule.getId().equals(id)) {
-                schedules.remove(schedule);
-                return true;
-            }
-        }
-        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule not found");
+        Schedule schedule = getSchedule(id);
+        scheduleRepository.delete(schedule);
+        return true;
     }
 }
