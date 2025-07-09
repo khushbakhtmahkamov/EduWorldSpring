@@ -5,6 +5,7 @@ import com.example.eduworldspring.dto.role.RoleDto;
 import com.example.eduworldspring.dto.role.RoleUpdateDto;
 import com.example.eduworldspring.mapper.RoleMapper;
 import com.example.eduworldspring.model.Role;
+import com.example.eduworldspring.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.eduworldspring.exceptions.BusinessRuntimeException;
@@ -17,10 +18,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
+    private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
 
     private List<Role> roles = new ArrayList<>();
-    private long nextId = 1;
 
     @Override
     public List<RoleDto> getAllRoles() {
@@ -40,8 +41,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDto createRole(RoleCreateDto dto) {
         Role role = roleMapper.toModel(dto);
-        role.setId(nextId++);
-        roles.add(role);
+        role = roleRepository.save(role);
         return roleMapper.toDto(role);
     }
 
@@ -74,14 +74,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private Role findByIdOrThrow(Long id) {
-        for (Role role : roles) {
-            if (role.getId().equals(id)) {
-                return role;
-            }
-        }
-        throw new BusinessRuntimeException(
-                BusinessExceptionCode.NOT_FOUND, "Role with id " + id + " not found"
-        );
+        Role role = roleRepository.findById(id).orElse(null);
+        if (role == null)
+            throw new BusinessRuntimeException(
+                    BusinessExceptionCode.NOT_FOUND, "Role with id " + id + " not found"
+            );
+
+        return role;
     }
 
     @Override
