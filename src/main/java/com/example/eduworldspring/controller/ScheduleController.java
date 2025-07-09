@@ -3,10 +3,10 @@ package com.example.eduworldspring.controller;
 import com.example.eduworldspring.dto.schedule.ScheduleCreateUpdateDto;
 import com.example.eduworldspring.model.Schedule;
 import com.example.eduworldspring.service.ScheduleService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/schedules")
@@ -18,7 +18,7 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ArrayList<Schedule> getSchedules() {
+    public List<Schedule> getSchedules() {
         return scheduleService.getSchedules();
     }
 

@@ -11,7 +11,7 @@ public interface ScheduleMapper {
 
 //    @Mapping(target = "id", defaultExpression = "java(ThreadLocalRandom.current().nextLong(1, 1000))")
     @Mapping(target = "description", source = "scheduleCreateUpdateDto.description")
-    Schedule toSchedule(ScheduleCreateUpdateDto scheduleCreateUpdateDto, Long id, Lesson lesson);
+    Schedule toSchedule(ScheduleCreateUpdateDto scheduleCreateUpdateDto, Lesson lesson);
 
     @Mapping(target = "id", source = "id")
     Schedule toScheduleForUpdate(ScheduleCreateUpdateDto scheduleCreateUpdateDto, Long id);
