@@ -1,6 +1,7 @@
 package com.example.eduworldspring.service;
 
 
+import com.example.eduworldspring.dto.role.RoleDto;
 import com.example.eduworldspring.dto.user.UserCreateDto;
 import com.example.eduworldspring.exceptions.BusinessExceptionCode;
 import com.example.eduworldspring.exceptions.BusinessRuntimeException;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService{
     private List<User> users = new ArrayList<>();
     @Override
     public void addUser(UserCreateDto userCreateDto) {
-        Role role = roleService.getById(userCreateDto.getRoleId());
+        Role role = roleService.getEntityById(userCreateDto.getRoleId());
         if(role == null) {
             throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND,"Role not found with id: " + userCreateDto.getRoleId());
         }
