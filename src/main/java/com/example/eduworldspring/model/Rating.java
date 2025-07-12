@@ -5,13 +5,13 @@ public class Rating{
 private Long id;
 private User user;
 private Double grade;
-private Progress progress;
+//    private Progress progress;
 
-    public Rating(Long id, User user, Double grade, Progress progress) {
+    public Rating(Long id, User user, Double grade){ //, Progress progress) {
         this.id = id;
         this.user = user;
         this.grade = grade;
-        this.progress = progress;
+//        this.progress = progress;
     }
 
     public Long getId() {
@@ -37,12 +37,12 @@ private Progress progress;
     public void setGrade(Double grade) {
         this.grade = grade;
     }
-
-    public Progress getProgress() {
-        return progress;
-    }
-
-    public void setProgress(Progress progress) {
-        this.progress = progress;
-    }
+//
+//    public Progress getProgress() {
+//        return progress;
+//    }
+//
+//    public void setProgress(Progress progress) {
+//        this.progress = progress;
+//    }
 }
