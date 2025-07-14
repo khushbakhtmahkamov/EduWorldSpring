@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.example.eduworldspring.exceptions.BusinessRuntimeException;
 import com.example.eduworldspring.exceptions.BusinessExceptionCode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,15 +20,13 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
 
-    private List<Role> roles = new ArrayList<>();
-
     @Override
     public List<RoleDto> getAllRoles() {
-        List<RoleDto> result = new ArrayList<>();
-        for (Role role : roles) {
-            result.add(roleMapper.toDto(role));
-        }
-        return result;
+        List<Role> roles = roleRepository.findAll();
+        return roles.stream()
+                .map(roleMapper::toDto)
+                .toList();
+
     }
 
     @Override
@@ -48,24 +45,19 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDto updateRole(Long id, RoleUpdateDto dto) {
         Role role = findByIdOrThrow(id);
-        role.setName(dto.getName());
-        role.setDescription(dto.getDescription());
-        role.setActive(dto.isActive());
+        role = roleMapper.toModel(id, dto);
+        roleRepository.save(role);
         return roleMapper.toDto(role);
     }
 
     @Override
     public void deleteRole(Long id) {
-        Role role = findByIdOrThrow(id);
-        boolean removed = false;
-        for (int i = 0; i < roles.size(); i++) {
-            if (roles.get(i).getId().equals(id)) {
-                roles.remove(i);
-                removed = true;
-                break;
-            }
-        }
-        if (!removed) {
+        try {
+            Role role = findByIdOrThrow(id);
+            roleRepository.delete(role);
+        }catch (BusinessRuntimeException ex){
+           throw ex;
+        } catch (Exception e) {
             throw new BusinessRuntimeException(
                     BusinessExceptionCode.COULD_NOT_DELETE,
                     "Could not delete role with id " + id
@@ -85,15 +77,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getEntityById(Long id) {
-        for (Role role : roles) {
-            if (role.getId().equals(id)) {
-                return role;
-            }
-        }
-        throw new BusinessRuntimeException(
-                BusinessExceptionCode.NOT_FOUND,
-                "Role with id " + id + " not found"
-        );
+        return findByIdOrThrow(id);
     }
 
 }
