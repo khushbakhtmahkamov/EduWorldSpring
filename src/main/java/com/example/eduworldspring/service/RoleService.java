@@ -1,9 +1,15 @@
 package com.example.eduworldspring.service;
 
+import com.example.eduworldspring.dto.role.*;
 import com.example.eduworldspring.model.Role;
 
-public interface RoleService {
+import java.util.List;
 
-    Role getById(Long id);
-    void createRole(Role role);
+public interface RoleService {
+    List<RoleDto> getAllRoles();
+    RoleDto getById(Long id);
+    RoleDto createRole(RoleCreateDto dto);
+    RoleDto updateRole(Long id, RoleUpdateDto dto);
+    Role getEntityById(Long id);
+    void deleteRole(Long id);
 }
