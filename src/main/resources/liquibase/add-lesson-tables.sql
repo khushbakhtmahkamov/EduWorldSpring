@@ -7,5 +7,5 @@ CREATE Table lessons
     start_date  VARCHAR(100) NOT NULL,
     end_date  VARCHAR(100) NOT NULL,
     subject_id BIGINT REFERENCES lessons (id),
-    teacher_id BIGINT REFERENCES teachers (id)
+    teacher_id BIGINT REFERENCES users (id)
 );
