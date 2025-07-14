@@ -1,6 +1,7 @@
 package com.example.eduworldspring.controller;
 
 import com.example.eduworldspring.dto.schedule.ScheduleCreateUpdateDto;
+import com.example.eduworldspring.dto.schedule.ScheduleDto;
 import com.example.eduworldspring.model.Schedule;
 import com.example.eduworldspring.service.ScheduleService;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,12 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public List<Schedule> getSchedules() {
+    public List<ScheduleDto> getSchedules() {
         return scheduleService.getSchedules();
     }
 
     @GetMapping("/{id}")
-    public Schedule getScheduleById(@PathVariable Long id) {
+    public ScheduleDto getScheduleById(@PathVariable Long id) {
         return scheduleService.getSchedule(id);
     }
 

@@ -1,5 +1,6 @@
 package com.example.eduworldspring.service;
 
+import com.example.eduworldspring.dto.subject.SubjectDto;
 import com.example.eduworldspring.exceptions.BusinessExceptionCode;
 import com.example.eduworldspring.exceptions.BusinessRuntimeException;
 import com.example.eduworldspring.mapper.SubjectMapper;
@@ -30,19 +31,21 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public Subject getSubject(Long id) {
+    public SubjectDto getSubject(Long id) {
         if (id == null) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
 
-        return subjectRepository.findById(id).orElseThrow(() ->
+        Subject subject = subjectRepository.findById(id).orElseThrow(() ->
                 new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found")
         );
+
+        return subjectMapper.toSubjectDto(subject);
     }
 
     @Override
-    public List<Subject> getSubjects() {
-        return subjectRepository.findAll();
+    public List<SubjectDto> getSubjects() {
+        return subjectRepository.findAll().stream().map(subjectMapper::toSubjectDto).toList();
     }
 
     @Override
