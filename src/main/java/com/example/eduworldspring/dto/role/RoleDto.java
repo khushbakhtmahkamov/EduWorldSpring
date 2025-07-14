@@ -6,7 +6,9 @@ import lombok.Setter;
 @Setter
 @Getter
 public class RoleDto {
+    private Long id;
     private String name;
+    private String description;
     private boolean active;
 
     public RoleDto() {}
