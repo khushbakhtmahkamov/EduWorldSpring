@@ -9,5 +9,6 @@
     <include file="add_subject_table.sql" relativeToChangelogFile="true"/>
     <include file="add-certificate-table.sql" relativeToChangelogFile="true"/>
     <include file="add-task-taskanswer-tables.sql" relativeToChangelogFile="true"/>
+    <include file="add-lesson-tables.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
