@@ -1,24 +1,23 @@
 package com.example.eduworldspring.service;
 
+import com.example.eduworldspring.dto.subject.SubjectDto;
 import com.example.eduworldspring.exceptions.BusinessExceptionCode;
 import com.example.eduworldspring.exceptions.BusinessRuntimeException;
 import com.example.eduworldspring.mapper.SubjectMapper;
-import com.example.eduworldspring.model.Subject;
 import com.example.eduworldspring.dto.subject.SubjectCreateUpdateDto;
-import lombok.Getter;
+import com.example.eduworldspring.model.Subject;
+import com.example.eduworldspring.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SubjectServiceImpl implements SubjectService {
 
+    private final SubjectRepository subjectRepository;
     private final SubjectMapper subjectMapper;
-    private ArrayList<Subject> subjects = new ArrayList<>();
 
     @Override
     public Subject createSubject(SubjectCreateUpdateDto subjectCreateUpdateDto) {
@@ -26,28 +25,27 @@ public class SubjectServiceImpl implements SubjectService {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "SubjectCreateUpdateDto cannot be null");
         }
 
-        Subject subject = subjectMapper.toSubject(subjectCreateUpdateDto, ThreadLocalRandom.current().nextLong(1, 100));
-        subjects.add(subject);
+        Subject subject = subjectMapper.toSubject(subjectCreateUpdateDto);
+        subjectRepository.save(subject);
         return subject;
     }
 
     @Override
-    public Subject getSubject(Long id) {
+    public SubjectDto getSubject(Long id) {
         if (id == null) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
 
-        for (Subject subject : subjects) {
-            if (subject.getId().equals(id)){
-                return subject;
-            }
-        }
-        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found");
+        Subject subject = subjectRepository.findById(id).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found")
+        );
+
+        return subjectMapper.toSubjectDto(subject);
     }
 
     @Override
-    public ArrayList<Subject> getSubjects() {
-        return subjects;
+    public List<SubjectDto> getSubjects() {
+        return subjectRepository.findAll().stream().map(subjectMapper::toSubjectDto).toList();
     }
 
     @Override
@@ -59,15 +57,17 @@ public class SubjectServiceImpl implements SubjectService {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "SubjectCreateUpdateDto cannot be null");
         }
 
-        Subject updatedSubject = subjectMapper.toSubject(subjectCreateUpdateDto, id);
+        Subject subject = subjectRepository.findById(id).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found")
+                );
 
-        for (int i = 0; i < subjects.size(); i++) {
-            if (subjects.get(i).getId().equals(updatedSubject.getId())) {
-                subjects.set(i, updatedSubject);
-                return true;
-            }
-        }
-        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found");
+        subject.setTitle(subjectCreateUpdateDto.getTitle());
+        subject.setDescription(subjectCreateUpdateDto.getDescription());
+        subject.setCredits(subjectCreateUpdateDto.getCredits());
+        subject.setCode(subjectCreateUpdateDto.getCode());
+
+        subjectRepository.save(subject);
+        return true;
     }
 
     @Override
@@ -76,12 +76,11 @@ public class SubjectServiceImpl implements SubjectService {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
 
-        for (Subject subject : subjects) {
-            if (subject.getId().equals(id)){
-                subjects.remove(subject);
-                return true;
-            }
-        }
-        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found");
+        subjectRepository.findById(id).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found")
+        );
+
+        subjectRepository.deleteById(id);
+        return true;
     }
 }

@@ -17,7 +17,6 @@ public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long lesson_id;
-
     private String name;
     private String description;
     private Boolean is_active;
