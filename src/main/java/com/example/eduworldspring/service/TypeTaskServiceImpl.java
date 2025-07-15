@@ -2,10 +2,11 @@ package com.example.eduworldspring.service;
 
 
 import com.example.eduworldspring.model.TypeTask;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Service
 public class TypeTaskServiceImpl implements TypeTaskService{
     List<TypeTask> typeTasks = new ArrayList<>();
     @Override

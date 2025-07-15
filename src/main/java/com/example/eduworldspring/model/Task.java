@@ -9,17 +9,23 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "tasks")
 public class Task {
-    private Long taskId;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long taskId;
+
     @ManyToOne
-    @JoinColumn(name = "lesson_id")
+    @JoinColumn(name = "lesson_id", referencedColumnName = "lesson_id")
     private Lesson lesson;
+
+    // Добавил lessonId для удобства работы с DTO
+    private Long lessonId;
 
     private String question;
     private String start_date;
@@ -27,9 +33,6 @@ public class Task {
     private boolean isActive;
     private int level;
     private Long typeId;
-    private Long lessonId;
-
-    public Task () {}
 
     public String getCorrectAnswer() {
         return "";
