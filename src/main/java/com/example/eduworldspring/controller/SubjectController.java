@@ -1,11 +1,12 @@
 package com.example.eduworldspring.controller;
 
+import com.example.eduworldspring.dto.subject.SubjectCreateUpdateDto;
+import com.example.eduworldspring.dto.subject.SubjectDto;
 import com.example.eduworldspring.model.Subject;
 import com.example.eduworldspring.service.SubjectService;
-import com.example.eduworldspring.dto.subject.SubjectCreateUpdateDto;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/subjects")
@@ -17,12 +18,12 @@ public class SubjectController {
     }
 
     @GetMapping("/{id}")
-    public Subject getSubject(@PathVariable Long id) {
+    public SubjectDto getSubject(@PathVariable Long id) {
         return subjectService.getSubject(id);
     }
 
     @GetMapping
-    public ArrayList<Subject> getAllSubjects() {
+    public List<SubjectDto> getAllSubjects() {
         return subjectService.getSubjects();
     }
 

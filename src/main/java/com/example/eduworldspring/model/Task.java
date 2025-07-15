@@ -6,20 +6,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "schedules")
-public class Schedule {
+@Table(name = "tasks")
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String description;
-    private Boolean isActive;
 
     @ManyToOne
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
+
+    private String question;
+    private String level;
+    private Boolean isActive;
+
+    public String getCorrectAnswer() {
+        return "";
+    }
 }

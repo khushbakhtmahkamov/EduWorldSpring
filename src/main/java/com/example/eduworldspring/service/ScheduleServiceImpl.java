@@ -1,38 +1,39 @@
 package com.example.eduworldspring.service;
 
 import com.example.eduworldspring.dto.schedule.ScheduleCreateUpdateDto;
+import com.example.eduworldspring.dto.schedule.ScheduleDto;
 import com.example.eduworldspring.exceptions.BusinessExceptionCode;
 import com.example.eduworldspring.exceptions.BusinessRuntimeException;
 import com.example.eduworldspring.mapper.ScheduleMapper;
 import com.example.eduworldspring.model.Lesson;
 import com.example.eduworldspring.model.Schedule;
-import lombok.Getter;
+import com.example.eduworldspring.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
 
+    private final ScheduleRepository scheduleRepository;
     private final ScheduleMapper scheduleMapper;
-    @Getter
-    private ArrayList<Schedule> schedules = new ArrayList<>();
     private final LessonService lessonService;
 
-    public Schedule getSchedule(Long id) {
+    public List<ScheduleDto> getSchedules() {
+        return scheduleRepository.findAll().stream().map(scheduleMapper::toScheduleDto).toList();
+    }
+
+    public ScheduleDto getSchedule(Long id) {
         if (id == null) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Id cannot be null");
         }
 
-        for (Schedule schedule : schedules) {
-            if (schedule.getId().equals(id)) {
-                return schedule;
-            }
-        }
-        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule with id " + id + "not found");
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule with id " + id + " not found"));
+
+        return scheduleMapper.toScheduleDto(schedule);
     }
 
     public Schedule createSchedule(ScheduleCreateUpdateDto scheduleCreateUpdateDto) {
@@ -42,8 +43,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Lesson not found");
         }
 
-        Schedule schedule = scheduleMapper.toSchedule(scheduleCreateUpdateDto, ThreadLocalRandom.current().nextLong(1,100), lesson);
-        schedules.add(schedule);
+        Schedule schedule = scheduleMapper.toSchedule(scheduleCreateUpdateDto, lesson);
+        scheduleRepository.save(schedule);
         return schedule;
     }
 
@@ -54,29 +55,35 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (scheduleCreateUpdateDto == null) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "ScheduleCreateUpdateDto cannot be null");
         }
-
-        Schedule updatedSchedule = scheduleMapper.toScheduleForUpdate(scheduleCreateUpdateDto, id);
-
-        for (int i = 0; i < schedules.size(); i++) {
-            if (schedules.get(i).getId().equals(updatedSchedule.getId())) {
-                schedules.set(i, updatedSchedule);
-                return true;
-            }
+        if (scheduleCreateUpdateDto.getLessonId() == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "LessonId cannot be null");
         }
-        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule not found");
+
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule with id " + id + " not found"));
+
+        // Updating schedule fields
+        schedule.setDescription(scheduleCreateUpdateDto.getDescription());
+
+        Lesson lesson = lessonService.getLesson(scheduleCreateUpdateDto.getLessonId());
+        schedule.setLesson(lesson);
+
+        schedule.setIsActive(scheduleCreateUpdateDto.getIsActive());
+
+        scheduleRepository.save(schedule);
+        return true;
     }
+
 
     public Boolean deleteSchedule(Long id) {
         if (id == null) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Id cannot be null");
         }
 
-        for ( Schedule schedule : schedules) {
-            if (schedule.getId().equals(id)) {
-                schedules.remove(schedule);
-                return true;
-            }
-        }
-        throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule not found");
+        scheduleRepository.findById(id).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule with id " + id + " not found"));
+
+        scheduleRepository.deleteById(id);
+        return true;
     }
 }
