@@ -2,6 +2,7 @@ package com.example.eduworldspring.service;
 
 
 import com.example.eduworldspring.dto.user.UserCreateDto;
+import com.example.eduworldspring.dto.user.UserResponseDto;
 import com.example.eduworldspring.model.Language;
 import com.example.eduworldspring.model.Role;
 import com.example.eduworldspring.model.User;
@@ -9,15 +10,15 @@ import com.example.eduworldspring.model.User;
 import java.util.List;
 
 public interface UserService {
-    void addUser(UserCreateDto userCreateDto);
+    UserResponseDto addUser(UserCreateDto userCreateDto);
 
-    boolean removeUserByName(String name);
+    void deleteUser(Long id);
 
-    User getByName(String name);
+    UserResponseDto getUser(Long id);
 
-    List<User> getUsers();
+    List<UserResponseDto> getUsers();
 
-    List<User> getUsersByLanguage(Language language);
+    List<UserResponseDto> getUsersByLanguageId(Long id);
 
-    List<User> getByRole(Role role);
+    List<UserResponseDto> getUsersByRoleId(Long id);
 }
