@@ -6,8 +6,10 @@ import com.example.eduworldspring.dto.category.CategoryDto;
 import java.util.List;
 
 public interface CategoryService {
-    void addCategory(CategoryCreateUpdateDto category);
-    boolean removeCategoryById(Long id);
+    CategoryDto addCategory(CategoryCreateUpdateDto category);
+    void deleteCategory(Long id);
     CategoryDto getByName(String name);
+    CategoryDto getById(Long id);
     List<CategoryDto> getCategories();
+    CategoryDto updateCategory(Long id, CategoryCreateUpdateDto category);
 }
