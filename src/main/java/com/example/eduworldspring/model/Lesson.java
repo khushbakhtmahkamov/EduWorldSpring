@@ -1,15 +1,21 @@
 package com.example.eduworldspring.model;
 
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "lessons")
 public class Lesson {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long lesson_id;
     private String name;
     private String description;
@@ -18,8 +24,4 @@ public class Lesson {
     private String end_date;
     private Long subject_id;
     private Long teacher_id;
-
-    public Lesson() {
-
-    }
 }
