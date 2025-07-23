@@ -10,5 +10,6 @@
     <include file="add-certificate-table.sql" relativeToChangelogFile="true"/>
     <include file="add-task-taskanswer-tables.sql" relativeToChangelogFile="true"/>
     <include file="add-lesson-tables.sql" relativeToChangelogFile="true"/>
+    <include file="add_category_table.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -7,7 +7,6 @@ import com.example.eduworldspring.model.Role;
 import com.example.eduworldspring.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -24,14 +23,4 @@ public interface UserMapper {
     @Mapping(target = "languageId", source = "language.id")
     @Mapping(target = "roleId", source = "role.id")
     UserResponseDto toUserResponseDto(User user);
-
-    @Named("toLanguageId")
-    default Long toLanguageId(Language language) {
-        return language != null ? language.getId() : null;
-    }
-
-    @Named("toRoleId")
-    default Long toRoleId(Role role) {
-        return role != null ? role.getId() : null;
-    }
 }
