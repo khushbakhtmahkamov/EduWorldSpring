@@ -16,7 +16,7 @@ import lombok.Setter;
 public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long lesson_id;
+    private Long id;
     private String name;
     private String description;
     private Boolean is_active;
@@ -24,4 +24,9 @@ public class Lesson {
     private String end_date;
     private Long subject_id;
     private Long teacher_id;
+
+    @ManyToOne
+    @JoinColumn(name = "subject_id", insertable = false, updatable = false)
+    private Subject subject;
+
 }
