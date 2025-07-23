@@ -1,3 +1,6 @@
+package com.example.eduworldspring.controller;
+import com.example.eduworldspring.model.Rating;
+import com.example.eduworldspring.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
