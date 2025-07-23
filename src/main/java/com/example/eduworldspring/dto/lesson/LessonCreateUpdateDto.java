@@ -1,12 +1,11 @@
 package com.example.eduworldspring.dto.lesson;
-
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class LessonCreateUpdateDto {
+    private Long id;
     private String name;
     private String description;
     private Boolean is_active;
