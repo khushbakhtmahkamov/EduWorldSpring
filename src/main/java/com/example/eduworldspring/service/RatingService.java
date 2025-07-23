@@ -1,3 +1,7 @@
+package com.example.eduworldspring.service;
+
+import com.example.eduworldspring.model.Rating;
+
 import java.util.List;
 
 public interface RatingService {
