@@ -6,9 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class TaskCreateDto {
+@AllArgsConstructor
+public class TaskDto {
+    private Long taskId;
     private String question;
     private String start_date;
     private String end_date;

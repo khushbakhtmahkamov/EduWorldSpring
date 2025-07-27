@@ -51,13 +51,14 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getTasksByLessonId(Long lessonId) {
         List<Task> result = new ArrayList<>();
         for (Task task : taskList) {
-            // Исправляем: используем lessonId вместо task.getLessonId()
-            if (task.getLesson() != null && task.getLesson().equals(lessonId)) {
+            if (task.getLesson() != null && task.getLesson().getId().equals(lessonId)) {
                 result.add(task);
             }
         }
         return result;
     }
+
+
 
     @Override
     public List<Task> getTasksByTypeId(Long typeId) {

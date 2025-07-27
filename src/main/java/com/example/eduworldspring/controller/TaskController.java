@@ -1,85 +1,102 @@
 package com.example.eduworldspring.controller;
 
 import com.example.eduworldspring.dto.task.TaskCreateDto;
+import com.example.eduworldspring.dto.task.TaskDto;
+import com.example.eduworldspring.mapper.TaskMapper;
 import com.example.eduworldspring.model.Task;
 import com.example.eduworldspring.service.TaskService;
+import com.example.eduworldspring.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
 
     private final TaskService taskService;
-
-    @Autowired
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    }
-
-    @PostMapping
-    public Task createTask(@RequestBody TaskCreateDto taskCreateDto) {
-        Task task = new Task();
-        task.setTaskId(generateTaskId());
-        task.setQuestion(taskCreateDto.getQuestion());
-        task.setStart_date(taskCreateDto.getStart_date());
-        task.setEnd_date(taskCreateDto.getEnd_date());
-        task.setActive(taskCreateDto.isActive());
-        task.setLevel(taskCreateDto.getLevel());
-        task.setTypeId(taskCreateDto.getTypeId());
-
-        taskService.createTask(task);
-        return task;
-    }
+    private final TaskMapper taskMapper;
+    private final LessonService lessonService;
 
     private long taskIdCounter = 1;
+
+    @Autowired
+    public TaskController(TaskService taskService, TaskMapper taskMapper, LessonService lessonService) {
+        this.taskService = taskService;
+        this.taskMapper = taskMapper;
+        this.lessonService = lessonService;
+    }
+
+
+    @PostMapping
+    public TaskDto createTask(@RequestBody TaskCreateDto taskCreateDto) {
+        Task task = taskMapper.toTask(taskCreateDto, lessonService);
+        task.setTaskId(generateTaskId());
+        taskService.createTask(task);
+        return taskMapper.toTaskDto(task);
+    }
+
     private Long generateTaskId() {
         return taskIdCounter++;
     }
 
+    // Получение всех задач в виде списка DTO
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks() {
-        List<Task> tasks = taskService.getAllTasks();
-        return ResponseEntity.ok(tasks);
+    public List<TaskDto> getAllTasks() {
+        return taskService.getAllTasks()
+                .stream()
+                .map(taskMapper::toTaskDto)
+                .collect(Collectors.toList());
     }
 
+    // Получение задачи по id
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id) {
+    public TaskDto getTaskById(@PathVariable("id") Long id) {
         Task task = taskService.getTaskById(id);
-        return ResponseEntity.ok(task);
+        return taskMapper.toTaskDto(task);
     }
 
+    // Обновление задачи по id
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable("id") Long id, @RequestBody Task task) {
+    public TaskDto updateTask(@PathVariable("id") Long id, @RequestBody TaskCreateDto taskCreateDto) {
+        Task task = taskMapper.toTask(taskCreateDto, lessonService);
         task.setTaskId(id);
         taskService.updateTask(task);
-        return ResponseEntity.ok(task);
+        return taskMapper.toTaskDto(task);
     }
 
+    // Удаление задачи по id
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable("id") Long id) {
+    public void deleteTask(@PathVariable("id") Long id) {
         taskService.deleteTask(id);
-        return ResponseEntity.noContent().build();
     }
 
+    // Получение всех активных задач
     @GetMapping("/active")
-    public ResponseEntity<List<Task>> getActiveTasks() {
-        List<Task> activeTasks = taskService.getActiveTasks();
-        return ResponseEntity.ok(activeTasks);
+    public List<TaskDto> getActiveTasks() {
+        return taskService.getActiveTasks()
+                .stream()
+                .map(taskMapper::toTaskDto)
+                .collect(Collectors.toList());
     }
 
+    // Получение задач по уроку
     @GetMapping("/lesson/{lessonId}")
-    public ResponseEntity<List<Task>> getTasksByLesson(@PathVariable("lessonId") Long lessonId) {
-        List<Task> tasks = taskService.getTasksByLessonId(lessonId);
-        return ResponseEntity.ok(tasks);
+    public List<TaskDto> getTasksByLesson(@PathVariable("lessonId") Long lessonId) {
+        return taskService.getTasksByLessonId(lessonId)
+                .stream()
+                .map(taskMapper::toTaskDto)
+                .collect(Collectors.toList());
     }
 
+    // Получение задач по типу
     @GetMapping("/type/{typeId}")
-    public ResponseEntity<List<Task>> getTasksByType(@PathVariable("typeId") Long typeId) {
-        List<Task> tasks = taskService.getTasksByTypeId(typeId);
-        return ResponseEntity.ok(tasks);
+    public List<TaskDto> getTasksByType(@PathVariable("typeId") Long typeId) {
+        return taskService.getTasksByTypeId(typeId)
+                .stream()
+                .map(taskMapper::toTaskDto)
+                .collect(Collectors.toList());
     }
 }

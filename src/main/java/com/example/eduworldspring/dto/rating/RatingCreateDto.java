@@ -1,3 +1,5 @@
+package com.example.eduworldspring.dto.rating;
+
 import lombok.Data;
 
 @Data
