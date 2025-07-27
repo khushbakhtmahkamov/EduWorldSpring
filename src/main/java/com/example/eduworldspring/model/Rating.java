@@ -1,38 +1,22 @@
 package com.example.eduworldspring.model;
 
-public class Rating{
+import jakarta.persistence.*;
+import lombok.*;
 
-private Long id;
-private User user;
-private Double grade;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Rating {
 
-    public Rating(Long id, User user, Double grade) {
-        this.id = id;
-        this.user = user;
-        this.grade = grade;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ratingId;
 
-    public Long getId() {
-        return id;
-    }
+    private Long userId;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Integer grade;
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Double getGrade() {
-        return grade;
-    }
-
-    public void setGrade(Double grade) {
-        this.grade = grade;
-    }
+    private Long progressId;
 }

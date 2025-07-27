@@ -12,6 +12,7 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
@@ -21,29 +22,28 @@ public class CategoryController {
         return categoryService.getCategories();
     }
 
+    @GetMapping("/{id}")
+    public CategoryDto getCategory(@PathVariable long id) {
+        return categoryService.getById(id);
+    }
+
     @PostMapping
-    public CategoryCreateUpdateDto createCategory(@RequestBody CategoryCreateUpdateDto categoryCreateUpdateDto) {
-        categoryService.addCategory(categoryCreateUpdateDto);
-        return categoryCreateUpdateDto;
+    public CategoryDto createCategory(@RequestBody CategoryCreateUpdateDto categoryCreateUpdateDto) {
+        return categoryService.addCategory(categoryCreateUpdateDto);
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteCategory(@PathVariable Long id) {
-        return categoryService.removeCategoryById(id);
+    public void deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
     }
 
-    /*@PutMapping("/{id}")
+    @PutMapping("/{id}")
     public CategoryDto updateCategory(@PathVariable Long id, @RequestBody CategoryCreateUpdateDto categoryCreateUpdateDto) {
-        categoryCreateUpdateDto.setId(id);
-        categoryService.addCategory(categoryCreateUpdateDto);
-        return categoryService.getByName(categoryCreateUpdateDto.getName());
-    }*/
+        return categoryService.updateCategory(id, categoryCreateUpdateDto);
+    }
 
-    @GetMapping("/{name}")
+    @GetMapping("/by-name/{name}")
     public CategoryDto getCategoryByName(@PathVariable String name) {
         return categoryService.getByName(name);
     }
-
-
-
 }

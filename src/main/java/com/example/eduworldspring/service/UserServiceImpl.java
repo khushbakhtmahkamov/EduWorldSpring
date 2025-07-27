@@ -1,99 +1,98 @@
 package com.example.eduworldspring.service;
 
 
-import com.example.eduworldspring.dto.role.RoleDto;
 import com.example.eduworldspring.dto.user.UserCreateDto;
+import com.example.eduworldspring.dto.user.UserResponseDto;
 import com.example.eduworldspring.exceptions.BusinessExceptionCode;
 import com.example.eduworldspring.exceptions.BusinessRuntimeException;
 import com.example.eduworldspring.mapper.UserMapper;
 import com.example.eduworldspring.model.Language;
 import com.example.eduworldspring.model.Role;
 import com.example.eduworldspring.model.User;
-import lombok.AllArgsConstructor;
+import com.example.eduworldspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
+    private final UserRepository userRepository;
     private final RoleService roleService;
     private final LanguageService languageService;
     private final UserMapper userMapper;
 
-
-    private List<User> users = new ArrayList<>();
     @Override
-    public void addUser(UserCreateDto userCreateDto) {
+    public UserResponseDto addUser(UserCreateDto userCreateDto) {
         Role role = roleService.getEntityById(userCreateDto.getRoleId());
-        if(role == null) {
-            throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND,"Role not found with id: " + userCreateDto.getRoleId());
-        }
         Language language = languageService.getById(userCreateDto.getLanguageId());
-        if(language == null) {
-            throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Language not found with id: " + userCreateDto.getLanguageId());
+
+        User user = userMapper.toUser(userCreateDto, language, role);
+
+        if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Email address already in use");
         }
 
-        Long id = ThreadLocalRandom.current().nextLong(1,100);
-        User user= userMapper.toUser(userCreateDto, id,  language, role);
-        if(user != null && user.getName() != null) {
-            users.add(user);
-        }
+        userRepository.save(user);
+        return userMapper.toUserResponseDto(user);
     }
 
     @Override
-    public boolean removeUserByName(String name) {
-        Iterator<User> iterator = users.iterator();
-        while (iterator.hasNext()) {
-            User user = iterator.next();
-            if (user.getName().equalsIgnoreCase(name)) {
-                iterator.remove();
-                return true;
-            }
+    public void deleteUser(Long id) {
+        if (id == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
-        return false;
+
+        if (!userRepository.existsById(id)) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "user with id " + id + " not found");
+        }
+        userRepository.deleteById(id);
     }
 
     @Override
-    public User getByName(String name) {
-        for (User user : users) {
-            if (user.getName().equalsIgnoreCase(name)) {
-                return user;
-            }
+    public UserResponseDto getUser(Long id) {
+        if (id == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
-        return null;
+
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found")
+        );
+
+        return userMapper.toUserResponseDto(user);
     }
 
     @Override
-    public List<User> getUsers() {
-        return new ArrayList<>(users);
+    public List<UserResponseDto> getUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toUserResponseDto)
+                .toList();
     }
 
     @Override
-    public List<User> getUsersByLanguage(Language language) {
-        List<User> filteredUsers = new ArrayList<>();
-        for (User user : users) {
-            if (user.getLanguage() != null && user.getLanguage().equals(language)) {
-                filteredUsers.add(user);
-            }
+    public List<UserResponseDto> getUsersByLanguageId(Long id) {
+        if (id == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
-        return filteredUsers;
+
+        return userRepository.findAllByLanguageId(id)
+                .stream()
+                .map(userMapper::toUserResponseDto)
+                .toList();
     }
 
     @Override
-    public List<User> getByRole(Role role) {
-        List<User> filteredUsers = new ArrayList<>();
-        for (User user : users) {
-            if (user.getRole() != null && user.getRole().equals(role)) {
-                filteredUsers.add(user);
-            }
+    public List<UserResponseDto> getUsersByRoleId(Long id) {
+        if (id == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
-        return filteredUsers;
+
+        return userRepository.findAllByRoleId(id)
+                .stream()
+                .map(userMapper::toUserResponseDto)
+                .toList();
     }
 }
