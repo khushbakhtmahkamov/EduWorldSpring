@@ -30,7 +30,6 @@ public class TaskController {
         task.setActive(taskCreateDto.isActive());
         task.setLevel(taskCreateDto.getLevel());
         task.setTypeId(taskCreateDto.getTypeId());
-        task.setLessonId(taskCreateDto.getLessonId());
 
         taskService.createTask(task);
         return task;

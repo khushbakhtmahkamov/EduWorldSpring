@@ -13,7 +13,7 @@ public interface TaskMapper {
     @Mapping(target = "question", source = "taskCreateDto.question")
     @Mapping(target = "start_date", source = "taskCreateDto.start_date")
     @Mapping(target = "end_date", source = "taskCreateDto.end_date")
-    @Mapping(target = "isActive", source = "taskCreateDto.isActive")
+    @Mapping(target = "active", source = "taskCreateDto.active")
     @Mapping(target = "level", source = "taskCreateDto.level")
     @Mapping(target = "typeId", source = "taskCreateDto.typeId")
     Task toTask(TaskCreateDto taskCreateDto, Lesson lesson);

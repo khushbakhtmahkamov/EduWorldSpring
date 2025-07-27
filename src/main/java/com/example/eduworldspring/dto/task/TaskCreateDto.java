@@ -11,7 +11,7 @@ public class TaskCreateDto {
     private String question;
     private String start_date;
     private String end_date;
-    private boolean isActive;
+    private boolean active;
     private int level;
     private Long typeId;
     private Long lessonId;

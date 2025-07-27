@@ -24,9 +24,6 @@ public class Task {
     @JoinColumn(name = "lesson_id", referencedColumnName = "lesson_id")
     private Lesson lesson;
 
-    // Добавил lessonId для удобства работы с DTO
-    private Long lessonId;
-
     private String question;
     private String start_date;
     private String end_date;
