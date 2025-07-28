@@ -14,5 +14,7 @@
     <include file="add_progress_table.sql" relativeToChangelogFile="true"/>
     <include file="add_refferenc_schedule_table.sql" relativeToChangelogFile="true"/>
     <include file="fix_referenc_lessons_table.sql" relativeToChangelogFile="true"/>
+    <include file="fix_table_category.sql" relativeToChangelogFile="true"/>
+    <include file="fix_table_schedule.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
