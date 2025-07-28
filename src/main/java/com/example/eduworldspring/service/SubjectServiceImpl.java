@@ -5,7 +5,9 @@ import com.example.eduworldspring.exceptions.BusinessExceptionCode;
 import com.example.eduworldspring.exceptions.BusinessRuntimeException;
 import com.example.eduworldspring.mapper.SubjectMapper;
 import com.example.eduworldspring.dto.subject.SubjectCreateUpdateDto;
+import com.example.eduworldspring.model.Category;
 import com.example.eduworldspring.model.Subject;
+import com.example.eduworldspring.repository.CategoryRepository;
 import com.example.eduworldspring.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     private final SubjectRepository subjectRepository;
     private final SubjectMapper subjectMapper;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public Subject createSubject(SubjectCreateUpdateDto subjectCreateUpdateDto) {
@@ -25,7 +28,13 @@ public class SubjectServiceImpl implements SubjectService {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "SubjectCreateUpdateDto cannot be null");
         }
 
-        Subject subject = subjectMapper.toSubject(subjectCreateUpdateDto);
+        Category category = categoryRepository.findById(subjectCreateUpdateDto.getCategoryId())
+                .orElseThrow(() -> new BusinessRuntimeException(
+                        BusinessExceptionCode.NOT_FOUND,
+                        "Category with id " + subjectCreateUpdateDto.getCategoryId() + " not found")
+                );
+
+        Subject subject = subjectMapper.toSubject(subjectCreateUpdateDto, category);
         subjectRepository.save(subject);
         return subject;
     }
@@ -59,7 +68,7 @@ public class SubjectServiceImpl implements SubjectService {
 
         Subject subject = subjectRepository.findById(id).orElseThrow(() ->
                 new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found")
-                );
+        );
 
         subject.setTitle(subjectCreateUpdateDto.getTitle());
         subject.setDescription(subjectCreateUpdateDto.getDescription());

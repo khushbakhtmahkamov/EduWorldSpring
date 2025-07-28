@@ -13,4 +13,5 @@ public class SubjectDto {
     private String code;
     private Integer credits;
     private String description;
+    private Long categoryId;
 }
