@@ -50,28 +50,33 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     public Boolean updateSchedule(Long id, ScheduleCreateUpdateDto scheduleCreateUpdateDto) {
-//        if (id == null) {
-//            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Id cannot be null");
-//        }
-//        if (scheduleCreateUpdateDto == null) {
-//            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "ScheduleCreateUpdateDto cannot be null");
-//        }
-//        if (scheduleCreateUpdateDto.getLessonId() == null) {
-//            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "LessonId cannot be null");
-//        }
-//
-//        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() ->
-//                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule with id " + id + " not found"));
-//
-//        // Updating schedule fields
-//        schedule.setDescription(scheduleCreateUpdateDto.getDescription());
-//
-//        Lesson lesson = lessonService.getLesson(scheduleCreateUpdateDto.getLessonId());
-//        schedule.setLesson(lesson);
-//
-//        schedule.setIsActive(scheduleCreateUpdateDto.getIsActive());
-//
-//        scheduleRepository.save(schedule);
+        if (id == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Id cannot be null");
+        }
+        if (scheduleCreateUpdateDto == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "ScheduleCreateUpdateDto cannot be null");
+        }
+        if (scheduleCreateUpdateDto.getLessonId() == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "LessonId cannot be null");
+        }
+
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Schedule with id " + id + " not found"));
+
+        // Updating schedule fields
+        schedule.setDescription(scheduleCreateUpdateDto.getDescription());
+
+        Lesson lesson = lessonRepository.findById(scheduleCreateUpdateDto.getLessonId())
+                .orElseThrow(() -> new BusinessRuntimeException(
+                        BusinessExceptionCode.NOT_FOUND,
+                        "Lesson with id " + scheduleCreateUpdateDto.getLessonId() + " not found"
+                ));
+
+        schedule.setLesson(lesson);
+
+        schedule.setIsActive(scheduleCreateUpdateDto.getIsActive());
+
+        scheduleRepository.save(schedule);
         return true;
     }
 
