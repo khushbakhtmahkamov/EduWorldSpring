@@ -1,25 +1,26 @@
 package com.example.eduworldspring.service;
 
-import com.example.eduworldspring.model.Task;
+import com.example.eduworldspring.dto.task.TaskCreateDto;
+import com.example.eduworldspring.dto.task.TaskDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
 public interface TaskService {
-    void createTask(Task task);
+    TaskDto createTask(TaskCreateDto taskCreateDto);
 
-    Task getTaskById(Long taskId);
+    TaskDto getTaskById(Long taskId);
 
-    List<Task> getAllTasks();
+    List<TaskDto> getAllTasks();
 
-    void updateTask(Task task);
+    TaskDto updateTask(Long id, TaskCreateDto taskCreateDto);
 
-    void deleteTask(Long taskId);
+    Boolean deleteTask(Long taskId);
 
-    List<Task> getTasksByLessonId(Long lessonId);
+    List<TaskDto> getTasksByLessonId(Long lessonId);
 
-    List<Task> getTasksByTypeId(Long typeId);
+    List<TaskDto> getTasksByTypeId(Long typeId);
 
-    List<Task> getActiveTasks();
+    List<TaskDto> getActiveTasks();
 
 }
