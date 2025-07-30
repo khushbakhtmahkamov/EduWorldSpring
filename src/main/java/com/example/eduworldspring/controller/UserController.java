@@ -31,17 +31,22 @@ public class UserController {
     }
 
     @GetMapping("/by-language/{id}")
-    public List<UserResponseDto> getByLanguageId(@PathVariable long id) {
+    public List<UserResponseDto> getByLanguageId(@PathVariable Long id) {
         return userService.getUsersByLanguageId(id);
     }
 
     @GetMapping("/by-role/{id}")
-    public List<UserResponseDto> getByRoleId(@PathVariable long id) {
+    public List<UserResponseDto> getByRoleId(@PathVariable Long id) {
         return userService.getUsersByRoleId(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable long id) {
+    public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+    }
+
+    @PutMapping("/{id}")
+    public void updateUser(@RequestBody UserCreateDto userCreateDto, @PathVariable Long id) {
+        userService.updateUser(id, userCreateDto);
     }
 }

@@ -7,6 +7,7 @@ import com.example.eduworldspring.model.Role;
 import com.example.eduworldspring.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -23,4 +24,12 @@ public interface UserMapper {
     @Mapping(target = "languageId", source = "language.id")
     @Mapping(target = "roleId", source = "role.id")
     UserResponseDto toUserResponseDto(User user);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "name", source = "userCreateDto.name")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "language", source = "language")
+    @Mapping(target = "role", source = "role")
+    void updateUserFromDto(UserCreateDto userCreateDto, Language language, Role role, @MappingTarget User user);
 }

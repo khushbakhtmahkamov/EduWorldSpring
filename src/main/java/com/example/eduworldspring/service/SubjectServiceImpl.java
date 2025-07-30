@@ -70,10 +70,13 @@ public class SubjectServiceImpl implements SubjectService {
                 new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found")
         );
 
-        subject.setTitle(subjectCreateUpdateDto.getTitle());
-        subject.setDescription(subjectCreateUpdateDto.getDescription());
-        subject.setCredits(subjectCreateUpdateDto.getCredits());
-        subject.setCode(subjectCreateUpdateDto.getCode());
+        Category category = categoryRepository.findById(subjectCreateUpdateDto.getCategoryId())
+                        .orElseThrow(() -> new BusinessRuntimeException(
+                                BusinessExceptionCode.NOT_FOUND,
+                                "Category with id " + subjectCreateUpdateDto.getCategoryId() + " not found"
+                        ));
+
+        subjectMapper.updateSubjectFromDto(subjectCreateUpdateDto, subject, category);
 
         subjectRepository.save(subject);
         return true;

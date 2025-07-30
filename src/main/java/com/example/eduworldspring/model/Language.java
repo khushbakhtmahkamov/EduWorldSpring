@@ -18,6 +18,5 @@ public class Language {
     private Long id;
     private String name;
     private String code;
-
-    private boolean isActive;
+    private Boolean isActive;
 }
