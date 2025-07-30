@@ -1,8 +1,9 @@
 package com.example.eduworldspring.controller;
 
-import com.example.eduworldspring.model.Lesson;
-import com.example.eduworldspring.service.LessonService;
+import com.example.eduworldspring.dto.lesson.LessonDto;
 import com.example.eduworldspring.dto.lesson.LessonCreateUpdateDto;
+import com.example.eduworldspring.service.LessonService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,28 +18,28 @@ public class LessonController {
     }
 
     @GetMapping("/{id}")
-    public Lesson getLesson(@PathVariable Long id) {
+    public LessonDto getLesson(@PathVariable Long id) {
         return lessonService.getLesson(id);
     }
 
     @GetMapping
-    public List<Lesson> getAllLessons() {
+    public List<LessonDto> getAllLessons() {
         return lessonService.getLessons();
     }
 
     @PostMapping
-    public Lesson addLesson(@RequestBody LessonCreateUpdateDto lessonCreateUpdateDto) {
-        return lessonService.createLesson(lessonCreateUpdateDto);
+    public LessonDto addLesson(@Valid @RequestBody LessonCreateUpdateDto dto) {
+        return lessonService.createLesson(dto);
     }
 
     @PutMapping("/{id}")
-    public Boolean updateLesson(@RequestBody LessonCreateUpdateDto lessonCreateUpdateDto,
-                                @PathVariable Long id) {
-        return lessonService.updateLesson(id, lessonCreateUpdateDto);
+    public void updateLesson(@Valid @RequestBody LessonCreateUpdateDto dto,
+                             @PathVariable Long id) {
+        lessonService.updateLesson(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public Boolean deleteLesson(@PathVariable Long id) {
-        return lessonService.deleteLesson(id);
+    public void deleteLesson(@PathVariable Long id) {
+        lessonService.deleteLesson(id);
     }
 }

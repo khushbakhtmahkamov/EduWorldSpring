@@ -1,21 +1,21 @@
 package com.example.eduworldspring.service;
 
 import com.example.eduworldspring.dto.lesson.LessonCreateUpdateDto;
-import com.example.eduworldspring.model.Lesson;
-import com.example.eduworldspring.model.Lesson;
+import com.example.eduworldspring.dto.lesson.LessonDto;
+
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public interface LessonService {
-    Lesson createLesson(LessonCreateUpdateDto lessonCreateUpdateDto);
+    LessonDto createLesson(LessonCreateUpdateDto lessonCreateUpdateDto);
 
-    Lesson getLesson(Long id);
+    LessonDto getLesson(Long id);
 
-    ArrayList<Lesson> getLessons();
+    List<LessonDto> getLessons();
 
-    Boolean updateLesson(Long id, LessonCreateUpdateDto lessonCreateUpdateDto);
+    void updateLesson(Long id, LessonCreateUpdateDto lessonCreateUpdateDto);
 
-    Boolean deleteLesson(Long id);
+    void deleteLesson(Long id);
 }
