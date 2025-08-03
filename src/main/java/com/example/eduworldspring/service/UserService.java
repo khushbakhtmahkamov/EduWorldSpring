@@ -21,4 +21,6 @@ public interface UserService {
     List<UserResponseDto> getUsersByLanguageId(Long id);
 
     List<UserResponseDto> getUsersByRoleId(Long id);
+
+    void updateUser(Long id, UserCreateDto userCreateDto);
 }

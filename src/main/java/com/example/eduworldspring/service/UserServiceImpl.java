@@ -9,10 +9,13 @@ import com.example.eduworldspring.mapper.UserMapper;
 import com.example.eduworldspring.model.Language;
 import com.example.eduworldspring.model.Role;
 import com.example.eduworldspring.model.User;
+import com.example.eduworldspring.repository.LanguageRepository;
+import com.example.eduworldspring.repository.RoleRepository;
 import com.example.eduworldspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -20,14 +23,23 @@ import java.util.List;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
-    private final RoleService roleService;
-    private final LanguageService languageService;
+    private final RoleRepository roleRepository;
+    private final LanguageRepository languageRepository;
     private final UserMapper userMapper;
 
     @Override
     public UserResponseDto addUser(UserCreateDto userCreateDto) {
-        Role role = roleService.getEntityById(userCreateDto.getRoleId());
-        Language language = languageService.getById(userCreateDto.getLanguageId());
+        Role role = roleRepository.findById(userCreateDto.getRoleId())
+                .orElseThrow(() -> new BusinessRuntimeException(
+                        BusinessExceptionCode.NOT_FOUND,
+                        "role with id " + userCreateDto.getRoleId() + " not found"
+                ));
+
+        Language language = languageRepository.findById(userCreateDto.getLanguageId())
+                .orElseThrow(() -> new BusinessRuntimeException(
+                        BusinessExceptionCode.NOT_FOUND,
+                        "language with id " + userCreateDto.getLanguageId() + " not found"
+                ));
 
         User user = userMapper.toUser(userCreateDto, language, role);
 
@@ -45,9 +57,8 @@ public class UserServiceImpl implements UserService{
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
 
-        if (!userRepository.existsById(id)) {
-            throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "user with id " + id + " not found");
-        }
+        userRepository.findById(id).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "user with id " + id + " not found"));
         userRepository.deleteById(id);
     }
 
@@ -94,5 +105,30 @@ public class UserServiceImpl implements UserService{
                 .stream()
                 .map(userMapper::toUserResponseDto)
                 .toList();
+    }
+
+    @Override
+    public void updateUser(Long id, UserCreateDto userCreateDto) {
+        if (id == null) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
+        }
+
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND,
+                        "user with id " + id + " not found"));
+
+        Role role = roleRepository.findById(userCreateDto.getRoleId()).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND,
+                        "role woth id " + userCreateDto.getRoleId() + " not found"));
+
+        Language language = languageRepository.findById(userCreateDto.getLanguageId()).orElseThrow(() ->
+                new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND,
+                        "language with id " + userCreateDto.getLanguageId() + " not found"));
+
+        userMapper.updateUserFromDto(userCreateDto, language, role, user);
+
+        user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+
+        userRepository.save(user);
     }
 }
