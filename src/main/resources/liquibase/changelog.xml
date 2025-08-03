@@ -17,4 +17,5 @@
     <include file="fix_table_category.sql" relativeToChangelogFile="true"/>
     <include file="fix_table_schedule.sql" relativeToChangelogFile="true"/>
     <include file="fix_table_LESSON.sql" relativeToChangelogFile="true"/>
+    <include file="add_column_status_to_users.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

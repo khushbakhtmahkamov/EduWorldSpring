@@ -1,6 +1,5 @@
 package com.example.eduworldspring.model;
 
-import com.example.eduworldspring.dto.user.UserCreateDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 @Setter
@@ -33,4 +31,7 @@ public class User {
     private Role role;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 }
