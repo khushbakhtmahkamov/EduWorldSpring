@@ -35,7 +35,7 @@ public class TaskAnswerServiceImpl implements TaskAnswerService {
         TaskAnswer taskAnswer = taskAnswerMapper.toModelFromRequest(dto);
         taskAnswer.setTask(task);
         taskAnswer.setAnswerAt(new Timestamp(System.currentTimeMillis()));
-        taskAnswer.setIsCorrect(taskAnswer.getAnswer().equals(task.getCorrectAnswer()));
+        //taskAnswer.setIsCorrect(taskAnswer.getAnswer().equals(task.getCorrectAnswer()));
 
         taskAnswer = taskAnswerRepository.save(taskAnswer);
         return taskAnswerMapper.toDto(taskAnswer);

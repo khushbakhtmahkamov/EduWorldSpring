@@ -24,8 +24,7 @@ public class Task {
     private String question;
     private String level;
     private Boolean isActive;
-
-    public String getCorrectAnswer() {
-        return "";
-    }
+    @ManyToOne
+    @JoinColumn(name = "type_task_id")
+    private TypeTask typeTask;
 }

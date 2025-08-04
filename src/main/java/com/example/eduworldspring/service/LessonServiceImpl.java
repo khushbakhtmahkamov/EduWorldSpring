@@ -8,6 +8,7 @@ import com.example.eduworldspring.mapper.LessonMapper;
 import com.example.eduworldspring.model.Lesson;
 import com.example.eduworldspring.model.Subject;
 import com.example.eduworldspring.model.User;
+import com.example.eduworldspring.pattern.observer.LessonPublisher;
 import com.example.eduworldspring.repository.LessonRepository;
 import com.example.eduworldspring.repository.SubjectRepository;
 import com.example.eduworldspring.repository.UserRepository;
@@ -24,6 +25,8 @@ public class LessonServiceImpl implements LessonService {
     private final LessonMapper lessonMapper;
     private final UserRepository userRepository;
     private final SubjectRepository subjectRepository;
+
+    private final LessonPublisher lessonPublisher;
 
     @Override
     public LessonDto createLesson(LessonCreateUpdateDto dto) {
@@ -44,6 +47,7 @@ public class LessonServiceImpl implements LessonService {
 
         Lesson lesson = lessonMapper.toLesson(dto, user, subject);
         lessonRepository.save(lesson);
+        lessonPublisher.publishLesson(lesson, user);
         return lessonMapper.toLessonDto(lesson);
     }
 
