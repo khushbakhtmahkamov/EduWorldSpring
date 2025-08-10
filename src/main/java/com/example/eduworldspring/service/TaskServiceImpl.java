@@ -1,11 +1,11 @@
 package com.example.eduworldspring.service;
 
+import com.example.eduworldspring.dto.lesson.LessonDto;
 import com.example.eduworldspring.dto.task.TaskCreateDto;
 import com.example.eduworldspring.dto.task.TaskDto;
 import com.example.eduworldspring.exceptions.BusinessExceptionCode;
 import com.example.eduworldspring.exceptions.BusinessRuntimeException;
 import com.example.eduworldspring.mapper.TaskMapper;
-import com.example.eduworldspring.model.Lesson;
 import com.example.eduworldspring.model.Task;
 import com.example.eduworldspring.model.TaskLevel;
 import com.example.eduworldspring.repository.TaskRepository;
@@ -108,7 +108,7 @@ public class TaskServiceImpl implements TaskService {
         if (Objects.isNull(lessonId)) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Lesson ID cannot be null");
         }
-        Lesson lesson = lessonService.getLesson(lessonId);
+        LessonDto lesson = lessonService.getLesson(lessonId);
         List<Task> tasks = taskRepository.findByLesson(lesson);
         return tasks.stream().map(taskMapper::toTaskDto).collect(Collectors.toList());
     }

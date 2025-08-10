@@ -1,6 +1,5 @@
 package com.example.eduworldspring.model;
 
-import com.example.eduworldspring.model.TaskLevel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -44,4 +43,8 @@ public class Task {
     private TaskLevel level;
 
     private Long typeId;
+
+    public String getCorrectAnswer() {
+        return "";
+    }
 }

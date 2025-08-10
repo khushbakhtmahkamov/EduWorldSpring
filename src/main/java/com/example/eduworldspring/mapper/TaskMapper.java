@@ -1,10 +1,10 @@
 package com.example.eduworldspring.mapper;
 
+import com.example.eduworldspring.dto.lesson.LessonDto;
 import com.example.eduworldspring.dto.task.TaskCreateDto;
 import com.example.eduworldspring.dto.task.TaskDto;
 import com.example.eduworldspring.exceptions.BusinessRuntimeException;
 import com.example.eduworldspring.exceptions.BusinessExceptionCode;
-import com.example.eduworldspring.model.Lesson;
 import com.example.eduworldspring.model.Task;
 import com.example.eduworldspring.service.LessonService;
 import org.mapstruct.*;
@@ -24,7 +24,7 @@ public interface TaskMapper {
     Task toTask(TaskCreateDto taskCreateDto, @Context LessonService lessonService);
     // Maps a lessonId to a Lesson entity using LessonService
     @Named("lessonIdToLesson")
-    default Lesson lessonIdToLesson(Long lessonId, @Context LessonService lessonService) {
+    default LessonDto lessonIdToLesson(Long lessonId, @Context LessonService lessonService) {
         if (Objects.isNull(lessonId)) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Lesson ID cannot be null");
         }

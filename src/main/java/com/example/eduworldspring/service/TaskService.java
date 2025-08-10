@@ -2,8 +2,10 @@ package com.example.eduworldspring.service;
 
 import com.example.eduworldspring.dto.task.TaskCreateDto;
 import com.example.eduworldspring.dto.task.TaskDto;
+import com.example.eduworldspring.model.TaskLevel;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 @Service
 public interface TaskService {
@@ -23,4 +25,7 @@ public interface TaskService {
 
     List<TaskDto> getActiveTasks();
 
+    List<TaskDto> getTasksByDateRange(LocalDate startDate, LocalDate endDate);
+
+    List<TaskDto> getTasksByLevel(TaskLevel level);
 }
