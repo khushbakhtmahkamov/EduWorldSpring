@@ -9,6 +9,7 @@ import com.example.eduworldspring.mapper.UserMapper;
 import com.example.eduworldspring.model.Language;
 import com.example.eduworldspring.model.Role;
 import com.example.eduworldspring.model.User;
+import com.example.eduworldspring.model.UserStatus;
 import com.example.eduworldspring.repository.LanguageRepository;
 import com.example.eduworldspring.repository.RoleRepository;
 import com.example.eduworldspring.repository.UserRepository;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
                 ));
 
         User user = userMapper.toUser(userCreateDto, language, role);
+        user.setStatus(UserStatus.ACTIVE);
 
         if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Email address already in use");
@@ -57,9 +59,12 @@ public class UserServiceImpl implements UserService {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
 
-        userRepository.findById(id).orElseThrow(() ->
+        User user = userRepository.findById(id).orElseThrow(() ->
                 new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "user with id " + id + " not found"));
-        userRepository.deleteById(id);
+
+        user.setStatus(UserStatus.DELETED);
+        user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        userRepository.save(user);
     }
 
     @Override
@@ -72,12 +77,16 @@ public class UserServiceImpl implements UserService {
                 new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Subject with id " + id + " not found")
         );
 
+        if (user.getStatus() == UserStatus.DELETED) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "User with id " + id + " not found");
+        }
+
         return userMapper.toUserResponseDto(user);
     }
 
     @Override
     public List<UserResponseDto> getUsers() {
-        return userRepository.findAll()
+        return userRepository.findAllByStatusNot(UserStatus.DELETED)
                 .stream()
                 .map(userMapper::toUserResponseDto)
                 .toList();
@@ -89,7 +98,7 @@ public class UserServiceImpl implements UserService {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
 
-        return userRepository.findAllByLanguageId(id)
+        return userRepository.findAllByLanguageIdAndStatusNot(id, UserStatus.DELETED)
                 .stream()
                 .map(userMapper::toUserResponseDto)
                 .toList();
@@ -101,7 +110,7 @@ public class UserServiceImpl implements UserService {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "id cannot be null");
         }
 
-        return userRepository.findAllByRoleId(id)
+        return userRepository.findAllByRoleIdAndStatusNot(id, UserStatus.DELETED)
                 .stream()
                 .map(userMapper::toUserResponseDto)
                 .toList();
@@ -126,9 +135,7 @@ public class UserServiceImpl implements UserService {
                         "language with id " + userCreateDto.getLanguageId() + " not found"));
 
         userMapper.updateUserFromDto(userCreateDto, language, role, user);
-
         user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-
         userRepository.save(user);
     }
 }

@@ -1,6 +1,5 @@
 package com.example.eduworldspring.model;
 
-import com.example.eduworldspring.dto.user.UserCreateDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,6 +36,8 @@ public class User  implements UserDetails {
     private Role role;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -52,4 +53,7 @@ public class User  implements UserDetails {
     @Override public boolean isAccountNonLocked() { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }
     @Override public boolean isEnabled() { return true; }
+
+
+
 }
