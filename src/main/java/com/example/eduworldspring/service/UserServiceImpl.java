@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -137,5 +138,18 @@ public class UserServiceImpl implements UserService {
         userMapper.updateUserFromDto(userCreateDto, language, role, user);
         user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         userRepository.save(user);
+    }
+
+    @Override
+    public boolean updatePassword(String email, String oldPassword, String newPassword) {
+        User user = userRepository.findById(userRepository.findByEmail(email).get().getId()).get();
+        if(user.getPassword().equals(oldPassword) && user.getEmail().equals(email)) {
+            user.setPassword(newPassword);
+            user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+
     }
 }
