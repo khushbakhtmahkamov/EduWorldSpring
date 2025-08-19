@@ -23,4 +23,7 @@ public interface UserService {
     List<UserResponseDto> getUsersByRoleId(Long id);
 
     void updateUser(Long id, UserCreateDto userCreateDto);
+
+    boolean updatePassword(String email, String oldPassword, String newPassword);
+
 }
