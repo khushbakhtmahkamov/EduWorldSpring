@@ -1,5 +1,6 @@
 package com.example.eduworldspring.dto.user;
 
+import com.example.eduworldspring.model.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,4 +13,5 @@ public class UserResponseDto {
     private String email;
     private Long languageId;
     private Long roleId;
+    private UserStatus status;
 }
