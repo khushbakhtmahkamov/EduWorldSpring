@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(userCreateDto, language, role);
         user.setStatus(UserStatus.ACTIVE);
 
-        if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()) {
+        if (userRepository.findByEmailIgnoreCase(userCreateDto.getEmail()).isPresent()) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Email address already in use");
         }
 

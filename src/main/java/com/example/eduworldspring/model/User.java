@@ -1,17 +1,13 @@
 package com.example.eduworldspring.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 @Setter
@@ -19,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User  implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,13 +27,19 @@ public class User  implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "language_id")
     private Language language;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
     private Timestamp createdAt;
     private Timestamp updatedAt;
+
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+
+    @Column(name = "token_expired_at")
+    private Timestamp tokenExpiredAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -53,7 +55,4 @@ public class User  implements UserDetails {
     @Override public boolean isAccountNonLocked() { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }
     @Override public boolean isEnabled() { return true; }
-
-
-
 }

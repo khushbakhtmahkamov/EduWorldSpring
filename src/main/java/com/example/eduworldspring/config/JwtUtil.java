@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Component
@@ -35,9 +36,23 @@ public class JwtUtil {
                 .getSubject();
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) {
+    public Date extractIssuedAt(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getIssuedAt(); // возвращает java.util.Date
+    }
+
+    public boolean validateToken(String token, UserDetails userDetails, Timestamp tokenExpiredAt) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        Date issuedAt = extractIssuedAt(token);
+
+        boolean notExpiredByJwt = !isTokenExpired(token);
+        boolean issuedAfterLogout = tokenExpiredAt == null || issuedAt.getTime() >= tokenExpiredAt.getTime();
+
+        return username.equals(userDetails.getUsername()) && notExpiredByJwt && issuedAfterLogout;
     }
 
     private boolean isTokenExpired(String token) {
