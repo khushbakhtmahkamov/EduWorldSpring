@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -79,6 +80,15 @@ public class LessonServiceImpl implements LessonService {
             throw new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Lesson not found");
         }
         lessonRepository.deleteById(id);
+    }
+
+    @Override
+    public Lesson getLessonEntityById(Long id) {
+        if (Objects.isNull(id)) {
+            throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Lesson ID cannot be null");
+        }
+        return lessonRepository.findById(id)
+                .orElseThrow(() -> new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Lesson not found with id: " + id));
     }
 
     @Override

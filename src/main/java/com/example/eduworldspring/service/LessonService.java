@@ -3,6 +3,7 @@ package com.example.eduworldspring.service;
 import com.example.eduworldspring.dto.lesson.LessonCreateUpdateDto;
 import com.example.eduworldspring.dto.lesson.LessonDto;
 
+import com.example.eduworldspring.model.Lesson;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface LessonService {
     void updateLesson(Long id, LessonCreateUpdateDto lessonCreateUpdateDto);
 
     void deleteLesson(Long id);
+
+    Lesson getLessonEntityById(Long id);
 }
