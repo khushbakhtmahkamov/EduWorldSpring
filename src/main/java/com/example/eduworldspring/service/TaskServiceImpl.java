@@ -31,14 +31,23 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDto createTask(TaskCreateDto taskCreateDto) {
-        if (Objects.isNull(taskCreateDto)) {
+        if (taskCreateDto == null) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "TaskCreateDto cannot be null");
         }
         if (taskCreateDto.getEndDate() != null && taskCreateDto.getStartDate() != null &&
                 taskCreateDto.getEndDate().isBefore(taskCreateDto.getStartDate())) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "End date cannot be before start date");
         }
-        Task task = taskMapper.toTask(taskCreateDto, lessonService);
+
+        Task task = new Task();
+        task.setQuestion(taskCreateDto.getQuestion());
+        task.setStartDate(taskCreateDto.getStartDate());
+        task.setEndDate(taskCreateDto.getEndDate());
+        task.setActive(taskCreateDto.isActive());
+        task.setLevel(taskCreateDto.getLevel());
+        task.setTypeId(taskCreateDto.getTypeId());
+        task.setLesson(lessonService.getLessonEntityById(taskCreateDto.getLessonId()));
+
         try {
             return taskMapper.toTaskDto(taskRepository.save(task));
         } catch (Exception e) {
@@ -76,12 +85,20 @@ public class TaskServiceImpl implements TaskService {
                 taskCreateDto.getEndDate().isBefore(taskCreateDto.getStartDate())) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "End date cannot be before start date");
         }
-        Task task = taskRepository.findById(id)
+
+        Task existingTask = taskRepository.findById(id)
                 .orElseThrow(() -> new BusinessRuntimeException(BusinessExceptionCode.NOT_FOUND, "Task not found with id: " + id));
-        Task updatedTask = taskMapper.toTask(taskCreateDto, lessonService);
-        updatedTask.setId(task.getId());
+
+        existingTask.setQuestion(taskCreateDto.getQuestion());
+        existingTask.setStartDate(taskCreateDto.getStartDate());
+        existingTask.setEndDate(taskCreateDto.getEndDate());
+        existingTask.setActive(taskCreateDto.isActive());
+        existingTask.setLevel(taskCreateDto.getLevel());
+        existingTask.setTypeId(taskCreateDto.getTypeId());
+        existingTask.setLesson(lessonService.getLessonEntityById(taskCreateDto.getLessonId()));
+
         try {
-            return taskMapper.toTaskDto(taskRepository.save(updatedTask));
+            return taskMapper.toTaskDto(taskRepository.save(existingTask));
         } catch (Exception e) {
             throw new BusinessRuntimeException(BusinessExceptionCode.COULD_NOT_UPDATE, "Failed to update task: " + e.getMessage());
         }
@@ -108,9 +125,10 @@ public class TaskServiceImpl implements TaskService {
         if (Objects.isNull(lessonId)) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Lesson ID cannot be null");
         }
-        LessonDto lesson = lessonService.getLesson(lessonId);
-        List<Task> tasks = taskRepository.findByLesson(lesson);
-        return tasks.stream().map(taskMapper::toTaskDto).collect(Collectors.toList());
+        return taskRepository.findByLesson(lessonService.getLessonEntityById(lessonId))
+                .stream()
+                .map(taskMapper::toTaskDto)
+                .collect(Collectors.toList());
     }
 
     @Override

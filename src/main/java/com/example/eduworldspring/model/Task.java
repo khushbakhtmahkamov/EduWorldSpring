@@ -1,5 +1,6 @@
 package com.example.eduworldspring.model;
 
+import com.example.eduworldspring.model.Lesson;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
