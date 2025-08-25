@@ -6,6 +6,8 @@ import com.example.eduworldspring.dto.user.UserResponseDto;
 import com.example.eduworldspring.model.Language;
 import com.example.eduworldspring.model.Role;
 import com.example.eduworldspring.model.User;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -23,4 +25,6 @@ public interface UserService {
     List<UserResponseDto> getUsersByRoleId(Long id);
 
     void updateUser(Long id, UserCreateDto userCreateDto);
+
+    ResponseEntity<String> logoutCurrentUser();
 }

@@ -1,6 +1,5 @@
 package com.example.eduworldspring.service;
 
-
 import com.example.eduworldspring.dto.user.UserCreateDto;
 import com.example.eduworldspring.dto.user.UserResponseDto;
 import com.example.eduworldspring.exceptions.BusinessExceptionCode;
@@ -14,6 +13,9 @@ import com.example.eduworldspring.repository.LanguageRepository;
 import com.example.eduworldspring.repository.RoleRepository;
 import com.example.eduworldspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(userCreateDto, language, role);
         user.setStatus(UserStatus.ACTIVE);
 
-        if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()) {
+        if (userRepository.findByEmailIgnoreCase(userCreateDto.getEmail()).isPresent()) {
             throw new BusinessRuntimeException(BusinessExceptionCode.BAD_REQUEST, "Email address already in use");
         }
 
@@ -137,5 +139,23 @@ public class UserServiceImpl implements UserService {
         userMapper.updateUserFromDto(userCreateDto, language, role, user);
         user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         userRepository.save(user);
+    }
+
+    @Override
+    public ResponseEntity<String> logoutCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+            return ResponseEntity.status(401).body("Пользователь не авторизован");
+        }
+
+        String email = authentication.getName();
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+
+        user.setTokenExpiredAt(new Timestamp(System.currentTimeMillis()));
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Вы успешно вышли из системы");
     }
 }

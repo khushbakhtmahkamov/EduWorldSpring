@@ -2,14 +2,15 @@ package com.example.eduworldspring.controller;
 
 import com.example.eduworldspring.config.JwtUtil;
 import com.example.eduworldspring.dto.auth.AuthRequest;
+import com.example.eduworldspring.dto.auth.ChangePasswordRequest;
+import com.example.eduworldspring.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,7 +20,7 @@ public class AuthController {
 
     private final AuthenticationManager authManager;
     private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
+    private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthRequest request) {
@@ -32,9 +33,9 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
 
-    @PostMapping("/logout")
-    public String logout() {
-        // Logic for user logout
-        return "Logout successful";
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        authService.changePassword(request);
+        return ResponseEntity.ok("Пароль успешно изменён");
     }
 }

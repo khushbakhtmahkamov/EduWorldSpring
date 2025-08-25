@@ -2,24 +2,27 @@ package com.example.eduworldspring.controller;
 
 import com.example.eduworldspring.dto.user.UserCreateDto;
 import com.example.eduworldspring.dto.user.UserResponseDto;
+import com.example.eduworldspring.repository.UserRepository;
 import com.example.eduworldspring.service.UserService;
+import com.example.eduworldspring.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping
     public List<UserResponseDto> getAllUsers() {
         return userService.getUsers();
     }
+
     @PostMapping
     public UserResponseDto createUser(@RequestBody UserCreateDto userCreateDto) {
         return userService.addUser(userCreateDto);
@@ -48,5 +51,10 @@ public class UserController {
     @PutMapping("/{id}")
     public void updateUser(@RequestBody UserCreateDto userCreateDto, @PathVariable Long id) {
         userService.updateUser(id, userCreateDto);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        return  userService.logoutCurrentUser();
     }
 }
